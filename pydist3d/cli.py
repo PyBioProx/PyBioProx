@@ -14,8 +14,8 @@ def create_parser():
     Create the parser
     """
     parser = argparse.ArgumentParser()
-    # TODO: Select inputs - see below
-    # parser.add_argument("num", help="A positional input")
+    parser.add_argument("folder", help="Folder to process")
+    parser.add_argument("--output-folder", help="Output folder")
     # parser.add_argument(
     #    "-v", "--verbose", help="Increase output verbosity",
     #    action="store_true")
@@ -28,5 +28,4 @@ def run():
     parser = create_parser()
     args = parser.parse_args()
 
-    # TODO: Pass args into main?
-    main.main()
+    main.main(args.folder, output_folder=args.output_folder)
