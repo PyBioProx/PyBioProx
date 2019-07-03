@@ -1,10 +1,21 @@
+import os
+import csv
+import logging
+import coloredlogs
 import numpy as np
 import tifffile
 import matplotlib.pyplot as plt
 import scipy.ndimage as ndi
 import skimage.filters as skfilt
-import csv
-import os
+
+
+logger = logging.getLogger(__name__)
+# Default format for coloredlogs is
+# "%(asctime)s %(hostname)s %(name)s[%(process)d] %(levelname)s %(message)s"
+coloredlogs.install(
+    fmt="%(asctime)s %(name)s:%(lineno)d %(levelname)s %(message)s",
+    level='DEBUG', logger=logger
+)
 
 
 # ------------------------------
@@ -32,7 +43,7 @@ def batch(input_folder, output_folder):
 
     for index, filepath in enumerate(filename_list):
         filename = os.path.basename(filepath)
-        print(
+        logger.info(
             "processing file{}, this is file {} of {}".format(
                 filename, index + 1, len(filename_list)))
         process_file(filepath, output_folder)
@@ -47,20 +58,26 @@ def process_file(filepath, output_folder):
     # dimensions are added, meaning that we do not need to
     # use the .squeeze function.
     filename = os.path.basename(filepath)
-    mydata = tifffile.imread(filepath)
+    datain = tifffile.imread(filepath)
 
-    # show dimensions of loaded image
-    print("The data we loaded has shape")
-    print(mydata.shape)
-    # Switch axis describing no. z-stacks with axis
-    # describing channels - easier slicing
-    mydatareshaped = np.moveaxis(mydata, 0, 1)
-    print(mydatareshaped.shape)
+    # Move channel axis to front
+    data = shuffle_smallest_dim_to_front(datain)
+
+    if data.ndim > 4:
+        raise ValueError(
+            "Unhandled dimensionality of data"
+            + f"\nData must be 3-4 dimensional, got {data.ndim}")
+
     # split channels
-    channel1 = mydatareshaped[0]
-    channel2 = mydatareshaped[1]
-    print("Channel 1 data has shape:", channel1.shape)
-    print("Channel 2 data has shape:", channel2.shape)
+    channel1 = data[0]
+    channel2 = data[1]
+
+    if channel1.ndim == 3:
+        channel1 = shuffle_smallest_dim_to_front(channel1)
+        channel2 = shuffle_smallest_dim_to_front(channel2)
+
+    logger.debug(f"Channel 1 data has shape: {channel1.shape}")
+    logger.debug(f"Channel 2 data has shape: {channel2.shape}")
     # at this point extra filtering steps can be inserted; I
     # have pre-filtered tis data in image-j so no need for extra filtering
     filtered1 = channel1
@@ -81,41 +98,19 @@ def process_file(filepath, output_folder):
     # distance transforms!
     # NOTE: Includes pixel sampling factors;
     # so distances will be in microns
+    sampling = [xymicsperpix for shape in channel1.shape]
+    if len(sampling) == 3:
+        sampling[0] = zmicsperpix
 
-    distancemap2 = ndi.distance_transform_edt(
-        ~mask2, sampling=[zmicsperpix, xymicsperpix, xymicsperpix]
-    )
+    distancemap2 = ndi.distance_transform_edt(~mask2, sampling=sampling)
 
     # We now create overlay figures for channel 1 and 2
     # and save to the input folder to allow
     # the thresholding to be assessed
     # Create a new figure object, and set the window title
 
-    # channel1 overlay images:
-    size = channel1[6].shape
-    plt.figure(
-        "Mask 1 (slice 6)",
-        figsize=(12, 12 * size[0] / size[1]),
-        dpi=size[1] / 12,
-    )
-    plt.axes([0, 0, 1, 1])
-    plt.imshow(channel1[6], cmap="gray")
-    plt.contour(mask1[6], levels=[0.5], colors=["r"])
-    plt.savefig("{}_mask1.png".format(filepath))
-    plt.close()
-
-    # channel2 overlay images:
-    plt.figure(
-        "Mask 2 (slice 6)",
-        figsize=(12, 12 * size[0] / size[1]),
-        dpi=size[1] / 12,
-    )
-    plt.axes([0, 0, 1, 1])
-    plt.imshow(channel2[6], cmap="gray")
-    plt.contour(mask2[6], levels=[0.5], colors=["r"])
-    plt.savefig("{}_mask2.png".format(filepath))
-    plt.close()
-    print("Created overlay images", flush=True)
+    plot_and_save_outlines(
+        channel1, channel2, mask1, mask2, filepath)
 
     # So next, for each object in mask1, let's
     # See how far it's border pixels are from the
@@ -130,14 +125,14 @@ def process_file(filepath, output_folder):
     labels1, num_objects1 = ndi.label(mask1)
 
     if num_objects1 > 500:
-        print("WARNING: Too many objects found, skipping")
+        logger.critical(f"Too many objects found ({num_objects1}), skipping")
         return
     # NB: As this function is in scipy.ndimage - it happily handles
     # N-d data for us!
     # It also outputs the number of objects found, so we can show that
     # in the terminal...
 
-    print("Number of objects in mask1:", num_objects1)
+    logger.info(f"Number of objects in mask1: {num_objects1}")
 
     # Next we want to process each labelled region (~object)
     # individually, so we will use a for-loop
@@ -229,13 +224,60 @@ def process_file(filepath, output_folder):
     file_out.close()
 
 
-def main():
+def shuffle_smallest_dim_to_front(data):
+    """
+    Assumes smallest axis is channel axis and
+    moves it to be the first dimension
+    """
+    channel_dim = np.argmin(data.shape)
+    return np.moveaxis(data, channel_dim, 0)
 
-    input_folder_name = "data"  # input folder name
-    output_folder = "tables"  # output folder name
-    batch(input_folder_name, output_folder)
+
+def plot_and_save_outlines(channel1, channel2, mask1, mask2, filepath):
+    # channel1 overlay images:
+    size = channel1.shape[-2:]
+    slices = [slice(None) for dim in channel1.shape]
+    for i in range(channel1.ndim-2):
+        # Get middle slice of any remaining channels
+        middle_index = channel1.shape[i]//2
+        slices[i] = middle_index
+    slices = tuple(slices)
+
+    plt.figure(
+        "Mask 1",
+        figsize=(12, 12 * size[0] / size[1]),
+        dpi=size[1] / 12,
+    )
+    plt.axes([0, 0, 1, 1])
+    plt.imshow(channel1[slices], cmap="gray")
+    plt.contour(mask1[slices], levels=[0.5], colors=["r"])
+    plt.savefig("{}_mask1.png".format(filepath))
+    plt.close()
+
+    # channel2 overlay images:
+    plt.figure(
+        "Mask 2",
+        figsize=(12, 12 * size[0] / size[1]),
+        dpi=size[1] / 12,
+    )
+    plt.axes([0, 0, 1, 1])
+    plt.imshow(channel2[slices], cmap="gray")
+    plt.contour(mask2[slices], levels=[0.5], colors=["r"])
+    plt.savefig("{}_mask2.png".format(filepath))
+    plt.close()
+    logger.info("Created overlay images")
+
+
+def main(input_folder, output_folder=None):
+    """
+    Main entry point to run the pydist3d analysis pipeline
+    """
+    if output_folder is None:
+        output_folder = os.path.join(input_folder, "tables")
+    batch(input_folder, output_folder)
 
 
 if __name__ == '__main__':
-    print("Running as script...")
-    main()
+    logger.debug("Running as script...")
+    input_folder = input("Please enter an input folder")
+    main(input_folder)
