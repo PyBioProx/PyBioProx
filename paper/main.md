@@ -27,49 +27,50 @@ etc.**
 
 ## 3. Fluorescent object detection
 
-PyDist3D computes distance between labelled objects in separate fluorescent 
+PyDist3D computes distances between labelled objects in separate fluorescence 
 channels. Prior to detection of fluorescent objects, different pre-processing 
-steps may be performed to enable better object detection. PyDist3D provides a 
+steps may be performed to improve detection accuracy. PyDist3D provides a 
 limited number of pre-processing options derived from the `scipy.ndimage` 
 package. In the examples presented in this paper, pre-processing with a 
 multidimensional Gaussian filter (`scipy.ndimage.gaussian_filter`) at a sigma 
-of 1 is used to reduce single-pixel scale noise prior to object detection. 
+of `1` is used to reduce single-pixel scale noise prior to object detection. 
 Following pre-processing, binary 2D/3D arrays are generated to define regions 
 containing ‘on’ (1) and ‘off’ (0) pixels representing positive and 
 negative signal. PyDist3D provides a range of thresholding methods from the 
-scikit-image package to define positive and negative signal 1 . A comparison 
-operator is then used to generate binary 2D/3D images.Unless specified 
-otherwise, the Otsu thresholding method is used in the examples presented in 
-this paper 2 . Connected regions of ‘on’ pixels are then labelled as unique 
-objects using the `scipy.ndimage.label` function. Size exclusion criteria can 
-then be used to filter the identified objects for a particular size. In this 
-study, objects smaller than 10 (?) connected pixels are considered to be noise 
-and are thus removed. A binary erosion of the labelled objects is then employed 
-to identify its perimeter pixels. Finally, overlays of the detected object’s 
-perimeter on (user-defined)representative z-slices of the original image are 
-generated to allow for confirmation that fluorescent objects have been 
-appropriately labelled.
+scikit-image package to define positive and negative signal [1](#1). 
+A comparison operator is then used to generate binary 2D/3D images. Unless 
+specified otherwise, the Otsu thresholding method is used in the examples 
+presented in this paper [2](#2). Connected regions of ‘on’ pixels are then 
+labelled as unique objects using the `scipy.ndimage.label` function. Size 
+exclusion criteria can then be used to filter the identified objects for a 
+particular size. In this study, objects smaller than 10 connected pixels are 
+considered to be noise and are thus removed. A binary erosion of the labelled 
+objects is then employed to identify its perimeter pixels. Finally, overlays 
+of the detected object’s perimeter on (user-defined)representative z-slices of 
+the original image are generated to allow for confirmation that fluorescent 
+objects have been appropriately labelled.
 
 ## 4. Distance analysis
 
 PyDist3D allows for the measurement of distances of the perimeter pixels of 
-objects in one channel to the nearest ‘on’ pixels in another channel. For 
+objects in one channel to the nearest _on_ pixels in another channel. For 
 example, the distances of objects in channel X to objects in channel Y can be 
 measured. Distances analyses are performed using an exact Euclidean distance 
 transform of the fluorescent channel that object distances are measured towards 
 (i.e.channel Y). The distance of each perimeter pixel of the fluorescent object 
-in channel X to the nearest‘on’ pixel in channel Y is then measured. From 
+in channel X to the nearest _on_ pixel in channel Y is then measured. From 
 this data, summary statistics to describe the distance of each object in 
 channel X relative to objects in channel Y are generated. As described 
-subsequently, PyDist3D introduces a statistic termed the ‘distance score’ 
-in which the mean of each perimeter pixel of an object in channel X’s 
-distance to the nearest ‘on’ pixel in channel Y is calculated. Minimum and 
+subsequently, PyDist3D introduces a statistic termed the _distance score_ 
+in which the mean of each perimeter pixel of an object in channel X's 
+distance to the nearest _on_ pixel in channel Y is calculated. Minimum and 
 maximum distances from objects in channel X to the nearest object in channel Y 
 are also generated.
 
 # References
 
-1. van der Walt, S. et al. scikit-image: image processing in Python. PeerJ 2, 
-e453 (2014).
-2. Otsu, N. A Threshold Selection Method from Gray-Level Histograms. IEEE 
-Trans. Syst. Man. Cybern. 9, 62–66 (1979).
+<a name="1">1.</a> van der Walt, S. et al. scikit-image: image processing in 
+Python. PeerJ 2, e453 (2014).
+
+<a name="2">2.</a> Otsu, N. A Threshold Selection Method from Gray-Level 
+Histograms. IEEE Trans. Syst. Man. Cybern. 9, 62–66 (1979).
