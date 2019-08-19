@@ -1,0 +1,3 @@
+File source: This data comes from file xyz.tiff, sourced from thisandthatwebsite.com
+
+Figure description: 4 panel figure showing input data, segmentation, ...
