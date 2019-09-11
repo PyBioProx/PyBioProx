@@ -39,16 +39,16 @@ etc.**
 
 ### 3. Fluorescent object detection
 
-PyDist3D computes distances between labelled objects in separate fluorescence 
+PyDist computes distances between labelled objects in separate fluorescence 
 channels. Prior to detection of fluorescent objects, different pre-processing 
-steps may be performed to improve detection accuracy. PyDist3D provides a 
+steps may be performed to improve detection accuracy. PyDist provides a 
 limited number of pre-processing options derived from the `scipy.ndimage` 
 package. In the examples presented in this paper, pre-processing with a 
 multidimensional Gaussian filter (`scipy.ndimage.gaussian_filter`) at a sigma 
 of `1` is used to reduce single-pixel scale noise prior to object detection. 
 Following pre-processing, binary 2D/3D arrays are generated to define regions 
 containing ‘on’ (1) and ‘off’ (0) pixels representing positive and 
-negative signal. PyDist3D provides a range of thresholding methods from the 
+negative signal. PyDist provides a range of thresholding methods from the 
 scikit-image package to define positive and negative signal [1](#1). 
 A comparison operator is then used to generate binary 2D/3D images. Unless 
 specified otherwise, the Otsu thresholding method is used in the examples 
@@ -64,7 +64,7 @@ objects have been appropriately labelled.
 
 ### 4. Distance analysis
 
-PyDist3D allows for the measurement of distances of the perimeter pixels of 
+PyDist allows for the measurement of distances of the perimeter pixels of 
 objects in one channel to the nearest _on_ pixels in another channel. For 
 example, the distances of objects in channel X to objects in channel Y can be 
 measured. Distances analyses are performed using an exact Euclidean distance 
@@ -101,9 +101,9 @@ By contrast, neither median or mean PD<sub>min</sub> (edge-edge) distances can r
 
 The internalization of bacteria by innate immune cells such as macrophages is an important mechanism to contain microbial threats (**Refs needed**). Phagocytosis is a complex process involving the internalization of foreign particles such as bacteria and apoptotic cells into a benign compartment termed the nascent phagosome. A complex series of maturation events then occur in which the nascent phagosome rapidly changes its membrane composition and inter-luminal contents to form a microbicidal compartment termed the phagolysosome.  Whether or not bacteria reside within the mature phagolysosome during infection provides important information about the bacteria’s mechanisms of immune evasion. 
 
-Lysosome-Associated-Membrane-Protein 1 (LAMP1) is a regularly utilized marker of the phagolysosome. A ‘halo’ of LAMP-1 around a bacterium as shown in fig(x) indicates the localization of the bacteria within a phagolysosome. Typically, analyses of the extent of LAMP-1 encapsulation around bacteria are user-defined binary measures; manually counting the number of positive/negatively LAMP-1-associated bacteria in a dataset of blinded images [3](#3)-[7](#7). This method of analysis raises issues of reproducibility due to the somewhat subjective nature of defining what amount of LAMP-1 association equates to a positively LAMP-1 associated bacteria. The binary nature of the analysis may also result in the loss of important information as small but significant changes in the extent of bacterial encapsulation by LAMP-1 may not be identifiable by eye. PyDist3D provides an unbiased, quantitative means of assessing the association of bacteria to cellular compartment markers. 
+Lysosome-Associated-Membrane-Protein 1 (LAMP1) is a regularly utilized marker of the phagolysosome. A ‘halo’ of LAMP-1 around a bacterium as shown in fig(x) indicates the localization of the bacteria within a phagolysosome. Typically, analyses of the extent of LAMP-1 encapsulation around bacteria are user-defined binary measures; manually counting the number of positive/negatively LAMP-1-associated bacteria in a dataset of blinded images [3](#3)-[7](#7). This method of analysis raises issues of reproducibility due to the somewhat subjective nature of defining what amount of LAMP-1 association equates to a positively LAMP-1 associated bacteria. The binary nature of the analysis may also result in the loss of important information as small but significant changes in the extent of bacterial encapsulation by LAMP-1 may not be identifiable by eye. PyDist provides an unbiased, quantitative means of assessing the association of bacteria to cellular compartment markers. 
 
-The capacity of Staphylococcus aureus to survive for extended periods of time within macrophages has become increasingly apparent [3](#3)–[5](#5),[6](#6),[7](#7). Recent work indicates a capacity of S. aureus to survive and even replicate within LAMP-1 positive vesicles 1,2. Escape of S. aureus strains from the phagolysosomes of THP-1 cells and primary human macrophages has also been reported (references   1/2 respectively). We prepared an infection model of the S. aureus MSSA476 strain in the J774A.1 murine macrophage cell line. At early (1.5hr) and late (24hr) timepoints, LAMP-1 encapsulation of mCherry tagged S. aureus MSSA476 was captured by immunofluorescence z-stack confocal microscopy and analysed by PyDist3D.  As shown in (fig), distances scores (mean distance of perimeter S. aureus-positive pixels to nearest LAMP-1-positive pixels) for individual S. aureus are significantly smaller at 1.5hrs then at 24hrs. Thus, in this infection model, PyDist3D analysis suggests that S. aureus MSSA476 is significantly less likely to be encapsulated by LAMP-1 at late compared to early timepoints. This appears to be consistent with previous findings that S. aureus is capable of escape from the phagolysosome [3](#3),[8](#8).
+The capacity of Staphylococcus aureus to survive for extended periods of time within macrophages has become increasingly apparent [3](#3)–[5](#5),[6](#6),[7](#7). Recent work indicates a capacity of S. aureus to survive and even replicate within LAMP-1 positive vesicles 1,2. Escape of S. aureus strains from the phagolysosomes of THP-1 cells and primary human macrophages has also been reported (references   1/2 respectively). We prepared an infection model of the S. aureus MSSA476 strain in the J774A.1 murine macrophage cell line. At early (1.5hr) and late (24hr) timepoints, LAMP-1 encapsulation of mCherry tagged S. aureus MSSA476 was captured by immunofluorescence z-stack confocal microscopy and analysed by PyDist3D.  As shown in (fig), the PD<sub>mean</sub> for individual S. aureus are significantly smaller at 1.5hrs then at 24hrs. Thus, in this infection model, PyDist3D analysis suggests that S. aureus MSSA476 is significantly less likely to be encapsulated by LAMP-1 at late compared to early timepoints. This appears to be consistent with previous findings that S. aureus is capable of escape from the phagolysosome [3](#3),[8](#8).
 
 ## Results References
 
