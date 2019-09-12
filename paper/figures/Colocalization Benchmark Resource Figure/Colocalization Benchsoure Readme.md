@@ -2,7 +2,7 @@
 
 This figure is intended to show the ability of the Perimeter Distance 
 measurements to identify changes in ground-truth colocalization. Data is from 
-the colocalization benchmark source.]
+the colocalization benchmark source.
 
 Three sets of data are present: Image Set 1-3
 
@@ -15,6 +15,8 @@ measurements (i.e. the minimum distance between object in channel 1 to object
 in channel 2) are not able to identify differences in ground-truth 
 colocalization
 
+Note that images are given as .tiff's. This reads in with different dimensions
+to .tif
 ### Image Set 2
 
 As above, compares channels 1 and 3
