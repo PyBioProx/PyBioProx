@@ -28,9 +28,20 @@ As above, compares channels 1 and 3
 
 As above, compares channels 2 and 3
 
-## other notes
+## Ideas for Data Presentation
+
 It could be an idea to have Manders and Pearson coefficients for each of these
 images so we could plot them alongside our measurements to show how our distance
 /object based metrics ability to distinguish between ground-truth 
 colocalization compares to Manders and Pearson coefficients. 
 
+### Fig a
+
+A scatter plot showing all the PD<sub>mean</sub> for the 10% ground truth 
+colocalization of Image Set 1 and the 90% ground truth colocalization of 
+Image Set 1. This will allow us to illustrate the power of this method.
+
+### Fig b-d
+
+Plots showing how the mean and the median PD<sub>mean/median/max/min</sub> 
+metrics change with the changing ground-truth colocalization. 
