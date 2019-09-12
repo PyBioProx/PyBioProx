@@ -4,7 +4,10 @@ This figure is intended to show the ability of the Perimeter Distance
 measurements to identify changes in ground-truth colocalization. Data is from 
 the colocalization benchmark source.
 
-Three sets of data are present: Image Set 1-3
+Data is available here: https://www.colocalization-benchmark.com/downloads.html
+
+I have only considered Image Sets 1-3. Image Set 4 has seperated the channels
+into seperate images - and who has time for that!
 
 ### Image Set 1
 Red and Green (channels 1 and 2) objects, Josh's own analysis (comparing
