@@ -33,7 +33,8 @@ Perimeter Distance Mean (PD<sub>mean</sub>), Perimeter Distance Median
 (PD<sub>median</sub>), and Perimeter Distance Maximum (PD<sub>max</sub>). 
 To our knowledge, these metrics have not previously been defined. 
 
-Perimeter Distance (PD) measurements are described in **fig 1** and detailed 
+Perimeter Distance (PD) measurements are described in **PyDist_explanation
+fig** and detailed 
 extensively in the methods section. In brief, objects in one fluorescent channel 
 are detected and the perimeter pixels around the object determined. The distance 
 of each pixel in an object's perimeter to the nearest positive fluorescent 
@@ -89,15 +90,17 @@ negative signal. PyDist provides a range of thresholding methods from the
 scikit-image package to define positive and negative signal [1](#1). 
 A comparison operator is then used to generate binary 2D/3D images. Unless 
 specified otherwise, the Otsu thresholding method is used in the examples 
-presented in this paper [2](#2). Connected regions of ‘on’ pixels are then 
-labelled as unique objects using the `scipy.ndimage.label` function. Size 
-exclusion criteria can then be used to filter the identified objects for a 
-particular size. In this study, objects smaller than 10 connected pixels are 
-considered to be noise and are thus removed. A binary erosion of the labelled 
-objects is then employed to identify its perimeter pixels. Finally, overlays 
-of the detected object’s perimeter on (user-defined)representative z-slices of 
-the original image are generated to allow for confirmation that fluorescent 
-objects have been appropriately labelled.
+presented in this paper [2](#2). Alternatively, users can provide PyDist with 
+binary images that have been previously thresholded in another program. 
+Connected regions of ‘on’ pixels are then labelled as unique objects using the 
+`scipy.ndimage.label` function. Size exclusion criteria can then be used to 
+filter the identified objects for a particular size. In this study, objects 
+smaller than 10 connected pixels are considered to be noise and are thus 
+removed. A binary erosion of the labelled objects is then employed to identify 
+its perimeter pixels. Finally, overlays of the detected object’s perimeter on 
+(user-defined)representative z-slices of the original image are generated to 
+allow for confirmation that fluorescent objects have been appropriately 
+labelled.
 
 ### 4. Distance analysis
 
@@ -129,7 +132,8 @@ Histograms. IEEE Trans. Syst. Man. Cybern. 9, 62–66 (1979).
 ### Example 1 - Capacity of different PD measurements to determine colocalization
 
 To validate the capacity of this approach to detect changes in colocalization, 
-we utilized Image Set 1 from the Colocalization Benchmark Source (CBS). CBS is 
+we utilized Image Set 1 from the Colocalization Benchmark Source (CBS). Images 
+were processed using PyDist as described in the methods section.CBS is 
 an online database of 2D computer-simulated images with pre-defined 
 (ground truth) values of co-localization ranging from 0-90%. The PD values for 
 objects in the red channel to objects in the green channel were determined as 
@@ -237,4 +241,28 @@ doi:10.1111/cmi.12233
 <a name="9">9.</a> Kubica, M. et al. A Potential New Pathway for Staphylococcus 
 aureus Dissemination: The Silent Survival of S. aureus Phagocytosed by Human 
 Monocyte-Derived Macrophages. PLoS One 3, e1409 (2008).
+
+## Conclusion
+
+We have developed a user friendly open-source image-analysis tool called 
+PyDist that quantifies the spatial localization of fluorescent objects in one 
+channel relative to fluorescent signal in another channel. 
+Notably this tool functions with both 2D and 3D datasets. 
+We have also introduced new metrics of colocalization namely PD<sub>mean</sub>, 
+PD<sub>median</sub> and PD<sub>max</sub>. These metrics appear to have a strong
+capacity to accuratelydescribe the ground-truth colocalization values (**fig**). 
+PD<sub>mean</sub> in particuar was highly consistent in its ability to identify 
+known increases in % colocalization. 
+
+The applicability of PyDist analysis to make biological relevant observations 
+was then assessed. Using the PD<sub>mean</sub> metric, we were able to 
+identify significant differences in the colocalization of _S. aureus_ with a 
+marker of an intracellular compartment at early and late timepoints. These 
+observations were confirmed by manual identification of colocalization. 
+
+Collectively these results suggest that PyDist analysis and the 
+perimeter distance (PD) metrics described in this paper can function as a 
+powerful means of analysing the relative spatial colocalization of fluorescent
+biomakers. 
+
 
