@@ -62,7 +62,7 @@ allowed to proceed for 2hrs, before washing with PBS and treating with
 then washed 3x with PBS and DMEM containing 10µg/ml gentamicin added to 
 prevent bacterial outgrowth. At relevant timepoints, cells were washed with PBS 
 and fixed with 4% paraformaldehyde for 10min at 37°C. Cells were washed with 
-PBS and blocked/permeabilized in a PBS solution containing 0.2% saponin &amp; 
+PBS and blocked/permeabilized in a PBS solution containing 0.2% saponin & 
 5% bovine serum albumin (BSA). Cells were washed in PBS, overlaid with primary 
 antibody (1:100 inblocking/permeabilization solution) and incubated overnight 
 at 4°C. Cells were extensively washed in PBS then overlaid with secondary 
@@ -118,6 +118,9 @@ in which the mean of each perimeter pixel of an object in channel X's
 distance to the nearest _on_ pixel in channel Y is calculated. Minimum and 
 maximum distances from objects in channel X to the nearest object in channel Y 
 are also generated.
+
+![example figure markdown thing](./figures/figure1/blah.png) 
+
 
 ### Methods References
 
