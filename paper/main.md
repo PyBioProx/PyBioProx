@@ -171,7 +171,7 @@ and thus is not capable of identifying differences in colocalization. The mean
 PDmin (edge-edge) values do not appear to reliably decrease with increasing 
 ground-truth % colocalization. 
 
-### Example 2 - Fluorescent 3D confocal microscopy reveals escape of S. aureus from LAMP-1 positive vesicles at a 24h timepoint
+### Example 2 - Fluorescent 3D confocal microscopy & PyDist reveals escape of S. aureus from LAMP-1 positive vesicles at a 24h timepoint
 
 The internalization of bacteria by innate immune cells such as macrophages is 
 an important mechanism to contain microbial threats (**Refs needed**). 
@@ -247,25 +247,24 @@ Monocyte-Derived Macrophages. PLoS One 3, e1409 (2008).
 
 ## Conclusion
 
-We have developed a user friendly open-source image-analysis tool called 
-PyDist that quantifies the spatial localization of fluorescent objects in one 
-channel relative to fluorescent signal in another channel. 
-Notably this tool functions with both 2D and 3D datasets. 
-We have also introduced new metrics of colocalization namely PD<sub>mean</sub>, 
-PD<sub>median</sub> and PD<sub>max</sub>. These metrics appear to have a strong
-capacity to accuratelydescribe the ground-truth colocalization values (**fig**). 
-PD<sub>mean</sub> in particuar was highly consistent in its ability to identify 
+In this paper we introduced PyDist: a user friendly open-source image-analysis tool 
+that quantifies the relative spatial localization of fluorescent objectsin 2D 
+and 3D immunofluorescent microscopy datasets. 
+We have also suggested a set of new metrics to describe the relative 
+spatial colocalization of these fluorescent objects (PD<sub>mean</sub>,
+PD<sub>median</sub> & PD<sub>max</sub>). These metrics appear to have a strong
+capacity to accurately describe ground-truth colocalization values (**fig**). 
+PD<sub>mean</sub> in particular was highly consistent in its ability to identify 
 known increases in % colocalization. 
 
 The applicability of PyDist analysis to make biological relevant observations 
 was then assessed. Using the PD<sub>mean</sub> metric, we were able to 
 identify significant differences in the colocalization of _S. aureus_ with a 
 marker of an intracellular compartment at early and late timepoints. These 
-observations were confirmed by manual identification of colocalization. 
-
-Collectively these results suggest that PyDist analysis and the 
-perimeter distance (PD) metrics described in this paper can function as a 
-powerful means of analysing the relative spatial colocalization of fluorescent
-biomakers. 
-
+observations were confirmed by blinded manual analyses. Traditional pixel-
+based measures of colocalization such as Manders and Pearsons coefficients were 
+not capable of identifying these differences. Collectively these 
+results suggest that PyDist analysis and the perimeter distance (PD) metrics 
+described in this paper can function as a powerful means of analysing the
+relative spatial colocalization of fluorescent biomakers. 
 
