@@ -7,34 +7,39 @@ spatial distributions of fluorescent objects in microscopy images
 
 Detecting the co-localization of biomarkers via microscopy is a frequently 
 employed method to infer meaningful biological interactions within cells. By
-labelling two (or more) biomarkers with distinct fluorescent tags, the 
-biomarkers can be visualized by immunofluorescence microscopy methods. By 
-taking single or multiple images along the z-axis in the same X/Y axes 
+labelling two or more biomarkers with distinct fluorescent tags, the 
+biomarkers can be visualized by immunofluorescence microscopy methods.  
+Taking single or multiple images along the z-axis in the same X/Y axes 
 (referred to as a z-stack), the distribution of the biomarkers in 2D or 
 3D space can be observed. Once images are captured, the relationship between 
 the fluorescently-tagged biomarkers can then be assessed. A simplistic analysis 
 of colocalization may involve overlaying two fluorescent channels and manually 
 identifying regions of fluorescent tag overlap as colocalization. A range of 
-more sophisticated utomated co-localization analyses exist can be broadly 
+more sophisticated automated co-localization analyses exist, and can be broadly 
 grouped into pixel-based and object-based methods (**refs**).
 
 In this paper, we introduce PyDist; a user-friendly object-based colocalization 
-tool written in python that uses distance measurements to describe the 
+set of modules written in python that uses distance measurements to describe the 
 relationships between biomarkers in 2D or 3D space. Analysis of co-localization
 by distance measurements is not a novel concept. For example, an excellent tool 
 implemented in ImageJ called DiAna allows for the detailed distance-based 
-analysis of pairs of differently labelled fluorescent objects. The advantages 
-that PyDist brings include a high aptitude for the batch distance-based 
-colocalization analysis of large 2D and 3D immunofluorescent datasets. 
-PyDist produces a novel set of simple and intuitive distance-based metrics of 
+analysis of pairs of differently labelled fluorescent objects (**ref**). The core 
+advantages that PyDist brings include improved speed affording a high aptitude 
+for the batch distance-based colocalization analysis of large 2D and 3D 
+immunofluorescent datasets, as well as the extensibility of being written in a 
+much easier to learn language like Python, compared with e.g. Java or C++. 
+~~PyDist produces a novel set of simple and intuitive distance-based metrics of 
 colocalization that describe the relationship of each fluorescent object in one 
 channel to the fluorescent signal in another channel. These metrics are termed 
 Perimeter Distance Mean (PD<sub>mean</sub>), Perimeter Distance Median 
 (PD<sub>median</sub>), and Perimeter Distance Maximum (PD<sub>max</sub>). 
-To our knowledge, these metrics have not previously been defined. 
+To our knowledge, these metrics have not previously been defined.~~
+**As discussed the above is not a good universal metric - we need to tone this 
+down or not mention it at all (at least not in the intro)**
 
-Perimeter Distance (PD) measurements are described in **PyDist_explanation
-fig** and detailed 
+
+In PyDist we use Perimeter Distance (PD) measurements which are  
+are described in **PyDist_explanation fig** and detailed 
 extensively in the methods section. In brief, objects in one fluorescent channel 
 are detected and the perimeter pixels around the object determined. The distance 
 of each pixel in an object's perimeter to the nearest positive fluorescent 
