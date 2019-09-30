@@ -207,3 +207,5 @@ venv.bak/
 .mypy_cache/
 data
 tables
+script_version.py
+Methods.docx
