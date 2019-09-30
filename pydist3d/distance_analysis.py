@@ -4,11 +4,27 @@ Distance analysis functions
 
 J. Metz <metz.jp@gmail.com>
 """
+import numpy as np
 import scipy.ndimage as ndi
 from pydist3d.utility import logger
 
 
-def analyse_distances_edge_edge(mask1, mask2, xymicsperpix=1, zmicsperpix=1):
+def get_analyser(name):
+    """
+    Access a function in the current module by name
+    Return a list of analysis functions in the current
+    submodule
+    """
+    # Can't use hyphens or spaces
+    name_sanitized = name.replace('-', '_').replace(' ', '_')
+    candidates = globals()
+    # TODO: Remove non-functions from this
+    if name_sanitized not in candidates:
+        raise ValueError(f'{name} is not a valid distance analysis function')
+    return candidates[name_sanitized]
+
+
+def edge_to_edge(mask1, mask2, xymicsperpix=1, zmicsperpix=1):
     """
     Analyses edge-to-edge distances TODO: COMPLETE ME
     """
@@ -29,14 +45,14 @@ def analyse_distances_edge_edge(mask1, mask2, xymicsperpix=1, zmicsperpix=1):
     labels1, num_objects1 = ndi.label(mask1)
 
     if num_objects1 > 500:
-        logger.critical(f"Too many objects found ({num_objects1}), skipping")
-        return
+        logger.critical("Too many objects found (%s), skipping", num_objects1)
+        return None, None
     # NB: As this function is in scipy.ndimage - it happily handles
     # N-d data for us!
     # It also outputs the number of objects found, so we can show that
     # in the terminal...
 
-    logger.info(f"Number of objects in mask1: {num_objects1}")
+    logger.info("Number of objects in mask1: %s", num_objects1)
 
     # Next we want to process each labelled region (~object)
     # individually, so we will use a for-loop
@@ -76,8 +92,8 @@ def analyse_distances_edge_edge(mask1, mask2, xymicsperpix=1, zmicsperpix=1):
         # Now we can generate an outline of this region by performing
         # binary erosion of this region and getting the pixels where
         # mask_obj is True, but the eroded version is False!
-        eroded = ndi.binary_erosion(mask_obj)
-        outline = mask_obj & ~eroded
+        # eroded = ndi.binary_erosion(mask_obj)
+        outline = mask_obj & np.logical_not(ndi.binary_erosion(mask_obj))
 
         # Now we can get all the distances of the outline pixels
         # to the nearest object in mask2!
@@ -100,4 +116,4 @@ def analyse_distances_edge_edge(mask1, mask2, xymicsperpix=1, zmicsperpix=1):
         # current distances to the end of the list
         distances_list.append(distances)
         dist_stats_list.append(dist_stats)
-    output_distances_and_stats(output_folder, distances_list, dist_stats_list)
+    return distances_list, dist_stats_list

@@ -173,6 +173,7 @@ class TestProcessFile:
         called_imread = 0
         called_plottting_func = 0
         called_distance_analyser = 0
+        called_output_function = 0
         data = np.array([
             [[1, 2, 3],
              [4, 5, 6],
@@ -193,11 +194,19 @@ class TestProcessFile:
         def distance_analyser(*args, **kwargs):
             nonlocal called_distance_analyser
             called_distance_analyser += 1
+            return [], []
+
+        def mock_output_distances_and_stats(*args, **kwargs):
+            nonlocal called_output_function
+            called_output_function += 1
 
         monkeypatch.setattr(
             main.tifffile, 'imread', mock_tifffile_imread)
         monkeypatch.setattr(
             main, 'plot_and_save_outlines', mock_plotting_func)
+        monkeypatch.setattr(
+            main, 'output_distances_and_stats',
+            mock_output_distances_and_stats)
 
         main.process_file(
             filepath="eggs.tif",
@@ -206,3 +215,4 @@ class TestProcessFile:
         assert called_imread == 1
         assert called_plottting_func == 1
         assert called_distance_analyser == 1
+        assert called_output_function == 1

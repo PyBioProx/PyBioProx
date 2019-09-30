@@ -7,6 +7,7 @@ J. Metz <metz.jp@gmail.com>
 import numpy as np
 import imageio
 import scipy.ndimage as ndi
+from pydist3d import main
 
 
 def create_temp_image(tmp_path):
@@ -24,5 +25,5 @@ def create_temp_image(tmp_path):
 def test_main(tmp_path):
     """Coarse-grained test that this thing runs properly"""
     imagefile = create_temp_image(tmp_path)
-    print("Created temporary image at", imagefile)
-
+    output_folder = f"{imagefile.as_posix()}_output"
+    main.main(imagefile.parent, output_folder)

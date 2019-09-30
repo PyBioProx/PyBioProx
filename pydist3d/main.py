@@ -20,11 +20,6 @@ from pydist3d.utility import logger
 __zmicsperpix__ = 0.75
 __xymicsperpix__ = 0.08
 
-distance_analysers = {
-    'edge-edge': distance_analysis.analyse_distances_edge_edge,
-}
-
-
 def get_files(folder):
     # find .tif files in input_folder_name, add to directory
     listing = os.listdir(folder)
@@ -34,12 +29,12 @@ def get_files(folder):
     return filename_list
 
 
-def process_file(filepath, output_folder, distance_analyser='edge-edge'):
+def process_file(filepath, output_folder, distance_analyser='edge-to-edge'):
     """
     Perform main processing on the file
     """
     if isinstance(distance_analyser, str):
-        distance_analyser = distance_analysers[distance_analyser]
+        distance_analyser = distance_analysis.get_analyser(distance_analyser)
     # load the data using tifffile, unlike when
     # loading .czi files, no unnecessary
     # dimensions are added, meaning that we do not need to
@@ -67,8 +62,8 @@ def process_file(filepath, output_folder, distance_analyser='edge-edge'):
         channel1 = shuffle_smallest_dim_to_front(channel1)
         channel2 = shuffle_smallest_dim_to_front(channel2)
 
-    logger.debug(f"Channel 1 data has shape: {channel1.shape}")
-    logger.debug(f"Channel 2 data has shape: {channel2.shape}")
+    logger.debug("Channel 1 data has shape: %s", channel1.shape)
+    logger.debug("Channel 2 data has shape: %s", channel2.shape)
     # at this point extra filtering steps can be inserted; I
     # have pre-filtered tis data in image-j so no need for extra filtering
     filtered1 = channel1
@@ -79,7 +74,6 @@ def process_file(filepath, output_folder, distance_analyser='edge-edge'):
     # apply threshold using comparison operator to generate 3D binary stacks
     mask1 = filtered1 >= threshold_value1
     mask2 = filtered2 >= threshold_value2
-
 
     # We now create overlay figures for channel 1 and 2
     # and save to the input folder to allow
@@ -98,14 +92,18 @@ def process_file(filepath, output_folder, distance_analyser='edge-edge'):
     # "Analyze particles" in imagej; it identifies
     # connected clumps of pixels and gives them all a unique
     # label.
-    distance_analyser(
+    distances_list, dist_stats_list = distance_analyser(
         mask1, mask2,
         xymicsperpix=__xymicsperpix__, zmicsperpix=__zmicsperpix__)
 
+    output_distances_and_stats(
+        filename, output_folder, distances_list, dist_stats_list)
 
-def output_distances_and_stats(output_folder, distances_list, dist_stats_list):
+
+def output_distances_and_stats(name, folder, distances, dist_stats):
     """
-    Outputs the distances and stats
+    Outputs the distances and stats, for filename `name`
+    into output folder `folder`
     """
     # Now that we have all the distances in a list, we could
     # perform statistical tests on them, or get their means,
@@ -114,23 +112,21 @@ def output_distances_and_stats(output_folder, distances_list, dist_stats_list):
     # into a variety of software (including Excel...) for
     # later inspection!
 
-    if not os.path.isdir(output_folder):
-        os.makedirs(output_folder)
+    if not os.path.isdir(folder):
+        os.makedirs(folder)
 
     # To do this we're going to "open" a file (which returns
     # a "file-object" representing the open file
     # and then use the Python standard library's csv module
     # to send the data to the open file!
-    file_out = open(os.path.join(
-        output_folder, f"distance_table_{filename}.csv"), "w")
+    file_out = open(os.path.join(folder, f"distance_table_{name}.csv"), "w")
     writer = csv.writer(file_out)
-    writer.writerows(distances_list)
+    writer.writerows(distances)
     file_out.close()
 
-    file_out = open(os.path.join(
-        output_folder, f"stats_table_{filename}.csv"), "w")
+    file_out = open(os.path.join(folder, f"stats_table_{name}.csv"), "w")
     writer = csv.writer(file_out)
-    writer.writerows(dist_stats_list)
+    writer.writerows(dist_stats)
     file_out.close()
 
 
@@ -144,6 +140,9 @@ def shuffle_smallest_dim_to_front(data):
 
 
 def plot_and_save_outlines(channel1, channel2, mask1, mask2, filepath):
+    """
+    Creates and saves outline plots from the channel data and masks
+    """
     # channel1 overlay images:
     size = channel1.shape[-2:]
     slices = [slice(None) for dim in channel1.shape]
@@ -160,8 +159,12 @@ def plot_and_save_outlines(channel1, channel2, mask1, mask2, filepath):
     )
     plt.axes([0, 0, 1, 1])
     plt.imshow(channel1[slices], cmap="gray")
-    plt.contour(mask1[slices], levels=[0.5], colors=["r"])
-    plt.savefig("{}_mask1.png".format(filepath))
+    if len(np.unique(mask1[slices])) > 1:
+        plt.contour(mask1[slices], levels=[0.5], colors=["r"])
+        savename = "{}_mask1.png".format(filepath)
+    else:
+        savename = "{}_mask1_NO_REGIONS.png".format(filepath)
+    plt.savefig(savename)
     plt.close()
 
     # channel2 overlay images:
@@ -172,8 +175,14 @@ def plot_and_save_outlines(channel1, channel2, mask1, mask2, filepath):
     )
     plt.axes([0, 0, 1, 1])
     plt.imshow(channel2[slices], cmap="gray")
-    plt.contour(mask2[slices], levels=[0.5], colors=["r"])
-    plt.savefig("{}_mask2.png".format(filepath))
+    if len(np.unique(mask2[slices])) > 1:
+        plt.contour(mask2[slices], levels=[0.5], colors=["r"])
+        import warnings
+        warnings.warn(f"Values in mask2[slices]: {np.unique(mask2[slices])}")
+        savename = "{}_mask2.png".format(filepath)
+    else:
+        savename = "{}_mask2_NO_REGIONS.png".format(filepath)
+    plt.savefig(savename)
     plt.close()
     logger.info("Created overlay images")
 
