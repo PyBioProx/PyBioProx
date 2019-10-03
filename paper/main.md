@@ -28,30 +28,30 @@ advantages that PyDist brings include improved speed affording a high aptitude
 for the batch distance-based colocalization analysis of large 2D and 3D 
 immunofluorescent datasets, as well as the extensibility of being written in a 
 much easier to learn language like Python, compared with e.g. Java or C++. 
+
 ~~PyDist produces a novel set of simple and intuitive distance-based metrics of 
 colocalization that describe the relationship of each fluorescent object in one 
 channel to the fluorescent signal in another channel. These metrics are termed 
 Perimeter Distance Mean (PD<sub>mean</sub>), Perimeter Distance Median 
 (PD<sub>median</sub>), and Perimeter Distance Maximum (PD<sub>max</sub>). 
 To our knowledge, these metrics have not previously been defined.~~
-**As discussed the above is not a good universal metric - we need to tone this 
-down or not mention it at all (at least not in the intro)**
 
-
-In PyDist we use Perimeter Distance (PD) measurements which are  
-are described in **PyDist_explanation fig** and detailed 
-extensively in the methods section. In brief, objects in one fluorescent channel 
-are detected and the perimeter pixels around the object determined. The distance 
-of each pixel in an object's perimeter to the nearest positive fluorescent 
-signal in the second channel is then calculated. The units of this distance may 
-be pixels/voxels or in real-world units (e.g. µm/nm) if pixel/voxel dimensions 
-are known. The relative distance of this object in channel 1 to objects in 
-channel 2 can now be described by taking the mean, median, maximum or minimum 
-of these PD measurements (to give PD<sub>min/median/max</sub> or "edge-edge" 
-measurements respectively. We show that these metrics can function as 
-alternatives to traditional metrics of co-localization such as Manders/Persons 
-coefficients, and can provide powerful insights into the relative spatial 
-distributions of fluorescent biomarkers.
+** crossed-out section replaced with the below**
+This paper defines a set of descriptive measurements that quantify the spatial
+relationship of each object in fluorescent channel X to objects in fluorescent
+channel Y. Perimeter Distance (PD) measurements are defined in **PyDist_explanation fig** 
+are detailed extensively in the methods section. In brief, objects in one 
+fluorescent channel are detected and the perimeter pixels around the object 
+determined. The distance of each pixel in an object's perimeter to the nearest
+positive fluorescent signal in the second channel is then calculated. 
+The units of this distance may be pixels/voxels or in real-world units 
+(e.g. µm/nm) if pixel/voxel dimensions are known. The relative distance of this 
+object in channel 1 to objects in channel 2 can now be described by taking the
+mean, median, maximum or minimum of these PD measurements 
+(to give PD<sub>mean/median/max</sub> or "edge-edge" measurements respectively.
+We show that these metrics can function as alternatives to traditional metrics 
+of co-localization such as Manders/Persons coefficients, and can provide 
+powerful insights into the relative spatial distributions of fluorescent biomarkers.
 
 # Methods
 
