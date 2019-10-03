@@ -20,8 +20,11 @@ from pydist3d.utility import logger
 __zmicsperpix__ = 0.75
 __xymicsperpix__ = 0.08
 
+
 def get_files(folder):
-    # find .tif files in input_folder_name, add to directory
+    """
+    find .tif files in input_folder_name, add to directory
+    """
     listing = os.listdir(folder)
     filename_list = [
         os.path.join(folder, item)
@@ -39,7 +42,6 @@ def process_file(filepath, output_folder, distance_analyser='edge-to-edge'):
     # loading .czi files, no unnecessary
     # dimensions are added, meaning that we do not need to
     # use the .squeeze function.
-    filename = os.path.basename(filepath)
     datain = tifffile.imread(filepath)
 
     # Move channel axis to front
@@ -97,7 +99,8 @@ def process_file(filepath, output_folder, distance_analyser='edge-to-edge'):
         xymicsperpix=__xymicsperpix__, zmicsperpix=__zmicsperpix__)
 
     output_distances_and_stats(
-        filename, output_folder, distances_list, dist_stats_list)
+        os.path.basename(filepath), output_folder,
+        distances_list, dist_stats_list)
 
 
 def output_distances_and_stats(name, folder, distances, dist_stats):
@@ -197,8 +200,8 @@ def batch(input_folder, output_folder):
     for index, filepath in enumerate(filename_list):
         filename = os.path.basename(filepath)
         logger.info(
-            "processing file{}, this is file {} of {}".format(
-                filename, index + 1, len(filename_list)))
+            "processing file %s, this is file %d of %d",
+            filename, index + 1, len(filename_list))
         process_file(filepath, output_folder)
 
 
@@ -211,7 +214,14 @@ def main(input_folder, output_folder=None):
     batch(input_folder, output_folder)
 
 
-if __name__ == '__main__':
+def main_cli():
+    """
+    Main CLI interface
+    """
     logger.debug("Running as script...")
-    input_folder = input("Please enter an input folder")
-    main(input_folder)
+    folder = input("Please enter an input folder")
+    main(folder)
+
+
+if __name__ == '__main__':
+    main_cli()
