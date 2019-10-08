@@ -8,11 +8,11 @@ spatial distributions of fluorescent objects in microscopy images
 Detecting the co-localization of biomarkers via microscopy is a frequently 
 employed method to infer meaningful biological interactions within cells. By
 labelling two or more biomarkers with distinct fluorescent tags, the 
-biomarkers can be visualized by immunofluorescence microscopy methods.  
+biomarkers can be visualized by immunofluorescence microscopy methods. 
 Taking single or multiple images along the z-axis in the same X/Y axes 
-(referred to as a z-stack), the distribution of the biomarkers in 2D or 
-3D space can be observed. Once images are captured, the relationship between 
-the fluorescently-tagged biomarkers can then be assessed. A simplistic analysis 
+(referred to as a z-stack) allows the distribution of the biomarkers in 2D or 
+3D space to be observed. Once images are captured, the relationship between 
+the fluorescently-tagged biomarkers can be assessed. A simplistic analysis 
 of colocalization may involve overlaying two fluorescent channels and manually 
 identifying regions of fluorescent tag overlap as colocalization. A range of 
 more sophisticated automated co-localization analyses exist, and can be broadly 
@@ -29,18 +29,10 @@ for the batch distance-based colocalization analysis of large 2D and 3D
 immunofluorescent datasets, as well as the extensibility of being written in a 
 much easier to learn language like Python, compared with e.g. Java or C++. 
 
-~~PyDist produces a novel set of simple and intuitive distance-based metrics of 
-colocalization that describe the relationship of each fluorescent object in one 
-channel to the fluorescent signal in another channel. These metrics are termed 
-Perimeter Distance Mean (PD<sub>mean</sub>), Perimeter Distance Median 
-(PD<sub>median</sub>), and Perimeter Distance Maximum (PD<sub>max</sub>). 
-To our knowledge, these metrics have not previously been defined.~~
-
-** crossed-out section replaced with the below**
-This paper defines a set of descriptive measurements that quantify the spatial
+This paper also defines a set of descriptive measurements that quantify the spatial
 relationship of each object in fluorescent channel X to objects in fluorescent
 channel Y. Perimeter Distance (PD) measurements are defined in **PyDist_explanation fig** 
-are detailed extensively in the methods section. In brief, objects in one 
+and detailed extensively in the methods section. In brief, objects in one 
 fluorescent channel are detected and the perimeter pixels around the object 
 determined. The distance of each pixel in an object's perimeter to the nearest
 positive fluorescent signal in the second channel is then calculated. 
@@ -53,6 +45,17 @@ We show that these metrics can function as alternatives to traditional metrics
 of co-localization such as Manders/Persons coefficients, and can provide 
 powerful insights into the relative spatial distributions of fluorescent biomarkers.
 
+![**Fig 1 PD Measurements Explanation**](paper/figures/PyDist_explanation_figure.png)
+***Fig 1 - PD Measurements** A hypothetical example is 
+shown in which the distance-based colocalization of a
+blue fluorescent object relative to red fluorescent objects is assessed. 12
+perimeter voxels (illustrated as light-blue boxes) have been identified for the
+blue object. The numbers in the centre of each perimeter-voxel refer to PD
+measurements: the shortest distance from the perimeter-voxel to the nearest red
+fluorescent signal. The mean and median of all of these PD measurements gives
+the PDmean and PDmedian metrics respectively. The largest
+and smallest of these PD measurements gives the PDmax and
+PDmin(“edge-edge”) distances respectively.*
 # Methods
 
 ### 1. Macrophage infection assay procedure
