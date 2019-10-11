@@ -41,7 +41,7 @@ The units of this distance may be pixels/voxels or in real-world units
 object in channel 1 to objects in channel 2 can now be described by taking the
 mean, median, maximum or minimum of these PD measurements 
 (to give PD<sub>mean/median/max</sub> or "edge-edge" measurements respectively.
-We show that these metrics can function as alternatives to traditional metrics 
+We show that these metrics can function as alternatives to traditional measurements 
 of co-localization such as Manders/Persons coefficients, and can provide 
 powerful insights into the relative spatial distributions of fluorescent biomarkers.
 
