@@ -56,6 +56,7 @@ fluorescent signal. The mean and median of all of these PD measurements gives
 the PDmean and PDmedian metrics respectively. The largest
 and smallest of these PD measurements gives the PDmax and
 PDmin(“edge-edge”) distances respectively.*
+
 # Methods
 
 ### 1. Macrophage infection assay procedure
@@ -81,7 +82,7 @@ in PBS and mounting on slides containing prolong gold.
 
 Mounted samples were imaged using the Zeiss LSM 880 laser scanning microscope. 
 **(ask Ana for details). Detail of aperture, magnification, z-stack distance 
-etc.**
+etc.** 
 
 ### 3. Fluorescent object detection
 
@@ -144,27 +145,31 @@ Histograms. IEEE Trans. Syst. Man. Cybern. 9, 62–66 (1979).
 
 To validate the capacity of this approach to detect changes in colocalization, 
 we utilized Image Set 1 from the Colocalization Benchmark Source (CBS). Images 
-were processed using PyDist as described in the methods section.CBS is 
+were processed using PyDist as described in the methods section. CBS is 
 an online database of 2D computer-simulated images with pre-defined 
-(ground truth) values of co-localization ranging from 0-90%. The PD values for 
-objects in the red channel to objects in the green channel were determined as 
-previously described. In fig x , the PD<sub>mean</sub> for each red fluorescent
-object in the 10% and 90% colocalization images is plotted (1582 and 1592 
-objects were detected for the 10% and 90% images respectively).  As expected, 
-the PD<sub>mean</sub> values for the red objects of the 90% (ground-truth) 
-colocalization condition cluster near 0 pixels reflecting the high degree of 
-colocalization. In contrast, the PD<sub>mean</sub> values for the red objects
-in the 10% (ground-truth) colocalization condition have a wide distribution. 
-Significant distances as analysed by students t-tests are observed.
+(ground truth) values of co-localization ranging from 0-90%. Example CBS images
+with ground-truth colocalization values of 10%, 50% and 90% are shown in 
+**fig 2a** (the 'red' channel in the CBS dataset was converted to magenta for 
+better visualization).
 
-In **figs 2** , the mean and median PD<sub>mean</sub>, PD<sub>median</sub>, 
-PD<sub>max</sub> and PD<sub>min</sub> (edge-edge) distance metrics are plotted
-against the ground truth colocalization values for each image to visualize how
-they may result in different interpretations of PD data. As expected, the mean
-PD<sub>mean/median/max</sub> value for each image decreases as the ground truth
-% colocalization increases. Whilst the median PD<sub>mean/median/max</sub> 
-values also decrease with increasing ground truth colocalization, for both the
-80% and 90% co-localization images, the median PD<sub>mean/median/max</sub> 
+In **fig 2b**, the PD<sub>mean</sub> for each magenta fluorescent
+object vizualized in in the 10%, 50% and 90%  colocalization images is plotted.
+1544, 1592 and 1588 objects were detected for the 10%, 50% and 90% images respectively. 
+Significantly different distributions of PD<sub>mean</sub> values for each image
+are observed. The PD<sub>mean</sub> values for the magenta objects in the 10% colocalization image
+have a wide distribution, with PD<sub>mean</sub> values that cluster between
+5 and 10 pixels. Contrastingly, PD<sub>mean</sub> values for the magenta objects 
+of the 50% and 90% (ground-truth) colocalization condition cluster nearer 0 pixels 
+reflecting the higher degree of colocalization. 
+
+In **figs 2c-f** , the average PD<sub>mean</sub>, PD<sub>median</sub>, 
+PD<sub>max</sub> and PD<sub>min</sub> (edge-edge) distance measurements of the 
+objects in the red channel of CBS dataset 1 are plotted to visualize how
+they may result in different interpretations. As expected, the average
+PD<sub>mean/median/max</sub> values for each image decreases as ground truth
+% colocalization increases. In **supp fig 1** the median PD<sub>mean/median/max</sub> 
+values are plotted and also decrease with increasing ground truth colocalization. 
+For both the 80% and 90% co-localization images, the median PD<sub>mean/median/max</sub> 
 value is 0 pixels, thus not allowing for differentiation of these images. In
 **supp figs**, CBS data sets 2 and 3 are analysed. Similarly, the mean 
 PD<sub>mean/median/max</sub> values consistantly decrease as ground truth %
@@ -172,12 +177,23 @@ colocalization increases. Median PD<sub>mean/median/max</sub> values are less
 consistent in their ability to identify small differences in ground-truth % 
 colocalization (e.g. 50%-60% in **supp fig**).
 
-By contrast, neither median or mean PD<sub>min</sub> (edge-edge) distances can
-reliably identify increasing colocalization. The median PD<sub>min</sub> 
-(edge-edge) distance for all ground-truth colocalization conditions is 0 pixels
-and thus is not capable of identifying differences in colocalization. The mean 
-PDmin (edge-edge) values do not appear to reliably decrease with increasing 
-ground-truth % colocalization. 
+By contrast, neither the average (**fig 2f**) or median (**supp fig1**)
+PD<sub>min</sub> (edge-edge) distances can reliably identify increasing 
+colocalization. Average PDmin (edge-edge) 
+values do not decrease with increasing ground-truth 
+% colocalization. The median PD<sub>min</sub> (edge-edge) distance for all 
+ground-truth colocalization conditions is 0 pixel and thus is not capable of 
+identifying differences in colocalization.
+
+![**Fig 2 Colocalization Benchmark Source**](paper/figures/Fig_2_coloc_benchmark_131019.png)
+***Fig 2 - PD measurments identify known changes in colocalization** 
+**(A)** Representative images of the CBS Data Set 1 with known ground-truth
+colocalization values. The red channel in the CBS Data Set 1 is displayed in 
+magenta for better visualization. 
+**(B)** PD<sub>mean</sub> values for each of the red/magenta objects in **(A)**. 
+P-values were assessed using students t-test \*\*\*\*  = P<0.001. **(C-F)** The average 
+PD<sub>mean/median/max</sub> & edge-edge measurements +/- 95% CI for each object in 
+the red channel of the CBS dataset 1.*
 
 ### Example 2 - Fluorescent 3D confocal microscopy & PyDist reveals escape of S. aureus from LAMP-1 positive vesicles at a 24h timepoint
 
