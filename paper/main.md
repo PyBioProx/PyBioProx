@@ -16,7 +16,7 @@ the fluorescently-tagged biomarkers can be assessed. A simplistic analysis
 of colocalization may involve overlaying two fluorescent channels and manually 
 identifying regions of fluorescent tag overlap as colocalization. A range of 
 more sophisticated automated co-localization analyses exist, and can be broadly 
-grouped into pixel-based and object-based methods (**refs**).
+grouped into pixel-based and object-based methods [1](#1).
 
 In this paper, we introduce PyDist; a user-friendly object-based colocalization 
 set of modules written in python that uses distance measurements to describe the 
@@ -96,10 +96,10 @@ of `1` is used to reduce single-pixel scale noise prior to object detection.
 Following pre-processing, binary 2D/3D arrays are generated to define regions 
 containing ‘on’ (1) and ‘off’ (0) pixels representing positive and 
 negative signal. PyDist provides a range of thresholding methods from the 
-scikit-image package to define positive and negative signal [1](#1). 
+scikit-image package to define positive and negative signal [2](#2). 
 A comparison operator is then used to generate binary 2D/3D images. Unless 
 specified otherwise, the Otsu thresholding method is used in the examples 
-presented in this paper [2](#2). Alternatively, users can provide PyDist with 
+presented in this paper [3](#3). Alternatively, users can provide PyDist with 
 binary images that have been previously thresholded in another program. 
 Connected regions of ‘on’ pixels are then labelled as unique objects using the 
 `scipy.ndimage.label` function. Size exclusion criteria can then be used to 
@@ -128,15 +128,15 @@ distance to the nearest _on_ pixel in channel Y is calculated. Minimum and
 maximum distances from objects in channel X to the nearest object in channel Y 
 are also generated.
 
-![example figure markdown thing](./figures/figure1/blah.png) 
-
-
 ### Methods References
 
-<a name="1">1.</a> van der Walt, S. et al. scikit-image: image processing in 
+<a name="1">1.</a> Bolte, S. & Cordelières, F. P. A guided tour into subcellular 
+colocalization analysis in light microscopy. J. Microsc. 224, 213–232 (2006).
+
+<a name="2">1.</a> van der Walt, S. et al. scikit-image: image processing in 
 Python. PeerJ 2, e453 (2014).
 
-<a name="2">2.</a> Otsu, N. A Threshold Selection Method from Gray-Level 
+<a name="3">2.</a> Otsu, N. A Threshold Selection Method from Gray-Level 
 Histograms. IEEE Trans. Syst. Man. Cybern. 9, 62–66 (1979).
 
 # Results Section
@@ -213,7 +213,7 @@ of the phagolysosome. A ‘halo’ of LAMP-1 around a bacterium as shown in fig(
 indicates the localization of the bacteria within a phagolysosome. Typically, 
 analyses of the extent of LAMP-1 encapsulation around bacteria are user-defined
 binary measures; manually counting the number of positive/negatively 
-LAMP-1-associated bacteria in a dataset of blinded images [3](#3)-[7](#7). 
+LAMP-1-associated bacteria in a dataset of blinded images [4](#4)-[8](#8). 
 This method of analysis raises issues of reproducibility due to the somewhat
 subjective nature of defining what amount of LAMP-1 association equates to a 
 positively LAMP-1 associated bacteria. The binary nature of the analysis may 
@@ -231,41 +231,48 @@ macrophages has also been reported (references   1/2 respectively). We prepared
 an infection model of the S. aureus MSSA476 strain in the J774A.1 murine 
 macrophage cell line. At early (1.5hr) and late (24hr) timepoints, LAMP-1 
 encapsulation of mCherry tagged S. aureus MSSA476 was captured by 
-immunofluorescence z-stack confocal microscopy and analysed by PyDist3D.
-As shown in (fig), the PD<sub>mean</sub> for individual S. aureus are 
-significantly smaller at 1.5hrs then at 24hrs. Thus, in this infection model, 
+immunofluorescence z-stack confocal microscopy.
+
+Analysis of this data was initially performed by blinding images and manually
+counting how the % of LAMP-1 encapsulated bacteria is altered between timepoints 
+(**fig**). There is a large reduction in the percentage of LAMP-1 associated 
+bacteria at the late compared to early timepoint. The same data was then analysed
+by PyDist. As shown in (**fig**), the PD<sub>mean</sub> for individual S. aureus are 
+significantly smaller at 1.5hrs then at 24hrs. This 
+
+Thus, in this infection model, 
 PyDist3D analysis suggests that S. aureus MSSA476 is significantly less likely
 to be encapsulated by LAMP-1 at late compared to early timepoints. This appears 
 to be consistent with previous findings that S. aureus is capable of escape 
-from the phagolysosome [3](#3),[8](#8).
+from the phagolysosome [4](#4),[9](#9).
 
 ## Results References
 
-<a name="3">3.</a> Flannagan, R. S., Heit, B. & Heinrichs, D. E. Intracellular
+<a name="4">3.</a> Flannagan, R. S., Heit, B. & Heinrichs, D. E. Intracellular
 replication of Staphylococcus aureus in mature phagolysosomes in macrophages 
 precedes host cell death, and bacterial escape and dissemination. 
 Cell. Microbiol. 18, 514–535 (2016).
 
-<a name="4">4.</a> Jubrail, J. et al. Inability to sustain intraphagolysosomal
+<a name="5">4.</a> Jubrail, J. et al. Inability to sustain intraphagolysosomal
 killing of Staphylococcus aureus predisposes to bacterial persistence in 
 macrophages. Cell. Microbiol. 18, 80–96 (2016).
 
-<a name="5">5.</a> Surewaard, B. G. J. et al. Identification and treatment of 
+<a name="6">5.</a> Surewaard, B. G. J. et al. Identification and treatment of 
 the Staphylococcus aureus reservoir in vivo. J. Exp. Med. 213, 1141–51 (2016).
 
-<a name="6">6.</a>.	Custódio, R. et al. Characterization of secreted 
+<a name="7">6.</a>.	Custódio, R. et al. Characterization of secreted 
 sphingosine-1-phosphate lyases required for virulence and intracellular
 survival of Burkholderia pseudomallei. Mol. Microbiol. 102, 1004–1019 (2016).
 
-<a name="7">7.</a> Dallenga, T. et al. M. tuberculosis-Induced Necrosis of 
+<a name="8">7.</a> Dallenga, T. et al. M. tuberculosis-Induced Necrosis of 
 Infected Neutrophils Promotes Bacterial Growth Following Phagocytosis by 
 Macrophages. Cell Host Microbe 22, 519-530.e3 (2017).
 
-<a name="8">8.</a> Grosz, M. et al. Cytoplasmic replication of Staphylococcus
+<a name="9">8.</a> Grosz, M. et al. Cytoplasmic replication of Staphylococcus
 aureus upon phagosomal escape triggered by phenol-soluble modulin α. 
 doi:10.1111/cmi.12233
 
-<a name="9">9.</a> Kubica, M. et al. A Potential New Pathway for Staphylococcus 
+<a name="10">9.</a> Kubica, M. et al. A Potential New Pathway for Staphylococcus 
 aureus Dissemination: The Silent Survival of S. aureus Phagocytosed by Human 
 Monocyte-Derived Macrophages. PLoS One 3, e1409 (2008).
 
