@@ -240,11 +240,21 @@ bacteria at the late compared to early timepoint. The same data was then analyse
 by PyDist. As shown in (**fig**), the PD<sub>mean</sub> for individual S. aureus are 
 significantly smaller at 1.5hrs then at 24hrs. This 
 
-Thus, in this infection model, 
-PyDist3D analysis suggests that S. aureus MSSA476 is significantly less likely
-to be encapsulated by LAMP-1 at late compared to early timepoints. This appears 
-to be consistent with previous findings that S. aureus is capable of escape 
-from the phagolysosome [4](#4),[9](#9).
+Thus, in this infection model, PyDist3D analysis suggests that S. aureus MSSA476 
+is significantly less likely to be encapsulated by LAMP-1 at late compared to 
+early timepoints. This appears to be consistent with previous findings that 
+S. aureus is capable of escape from the phagolysosome [4](#4),[9](#9).
+
+![**Fig 3 PyDist3D identifys the escape of S. aureus from LAMP-1 positive vesicles**](paper/figures/LAMP-1_Fig_121119.png)
+**Fig 3 PyDist3D identifys the escape of _S. aureus_ from LAMP-1 positive vesicles**
+**(A)** Representative examples of _S. aureus_ with strong and weak LAMP-1 
+associations. An unshark mask pre-filtering operation has been applied
+to the LAMP-1 channel of these images to enable better object detection.
+**(B)** All PD<sub>mean</sub> values for each detected _S. aureus_ object relative
+to LAMP-1 positive signal across early (1.5 hr) and late (24 hr) timepoints
+**(C)** The _S. aureus_ PD<sub>mean</sub> values for early and late timepoints 
+from **(B)** displayed as a frequency distribution.
+
 
 ## Results References
 
