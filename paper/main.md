@@ -1,7 +1,7 @@
 # Title
 
-A distance-based image analysis tool and novel distance metrics to describe the
-spatial distributions of fluorescent objects in microscopy images
+PyDist: Distance-based Image Analysis in Python and Perimeter Distance Measurements to Describe the
+Spatial Distributions of Fluorescent Objects.
 
 # Introduction
 
@@ -9,17 +9,17 @@ Detecting the co-localization of biomarkers via microscopy is a frequently
 employed method to infer meaningful biological interactions within cells. By
 labelling two or more biomarkers with distinct fluorescent tags, the 
 biomarkers can be visualized by immunofluorescence microscopy methods. 
-Taking single or multiple images along the z-axis in the same X/Y axes 
+Taking single or multiple images along the Z-axis in the same X/Y axes 
 (referred to as a z-stack) allows the distribution of the biomarkers in 2D or 
 3D space to be observed. Once images are captured, the relationship between 
 the fluorescently-tagged biomarkers can be assessed. A simplistic analysis 
 of colocalization may involve overlaying two fluorescent channels and manually 
-identifying regions of fluorescent tag overlap as colocalization. A range of 
+identifying regions of fluorescent overlap as colocalization. A range of 
 more sophisticated automated co-localization analyses exist, and can be broadly 
 grouped into pixel-based and object-based methods [1](#1).
 
 In this paper, we introduce PyDist; a user-friendly object-based colocalization 
-set of modules written in python that uses distance measurements to describe the 
+module written in python that uses distance measurements to describe the 
 relationships between biomarkers in 2D or 3D space. Analysis of co-localization
 by distance measurements is not a novel concept. For example, an excellent tool 
 implemented in ImageJ called DiAna allows for the detailed distance-based 
@@ -41,10 +41,10 @@ The units of this distance may be pixels/voxels or in real-world units
 object in channel 1 to objects in channel 2 can now be described by taking the
 mean, median, maximum or minimum of these PD measurements 
 (to give PD<sub>mean/median/max</sub> or "edge-edge" measurements respectively.
-We show that these metrics can function as alternatives to traditional measurements 
+We show that these measurements can function as alternatives to traditional measurements 
 of co-localization such as Manders/Persons coefficients, and can provide 
 powerful insights into the relative spatial distributions of fluorescent biomarkers.
-
+``
 ![**Fig 1 PD Measurements Explanation**](paper/figures/PyDist_explanation_figure.png)
 ***Fig 1 - PD Measurements** A hypothetical example is 
 shown in which the distance-based colocalization of a
@@ -53,7 +53,7 @@ perimeter voxels (illustrated as light-blue boxes) have been identified for the
 blue object. The numbers in the centre of each perimeter-voxel refer to PD
 measurements: the shortest distance from the perimeter-voxel to the nearest red
 fluorescent signal. The mean and median of all of these PD measurements gives
-the PDmean and PDmedian metrics respectively. The largest
+the PDmean and PDmedian measurements respectively. The largest
 and smallest of these PD measurements gives the PDmax and
 PDmin(“edge-edge”) distances respectively.*
 
@@ -149,11 +149,8 @@ were processed using PyDist as described in the methods section. CBS is
 an online database of 2D computer-simulated images with pre-defined 
 (ground truth) values of co-localization ranging from 0-90%. Example CBS images
 with ground-truth colocalization values of 10%, 50% and 90% are shown in 
-**fig 2a** (the 'red' channel in the CBS dataset was converted to magenta for 
-better visualization).
-
-In **fig 2b**, the PD<sub>mean</sub> for each magenta fluorescent
-object vizualized in in the 10%, 50% and 90%  colocalization images is plotted.
+**fig 2a**. In **fig 2b**, the PD<sub>mean</sub> for each fluorescent
+object in channel 1 relative to the fluorescence in channel 2 in the 10%, 50% and 90% images is plotted.
 1544, 1592 and 1588 objects were detected for the 10%, 50% and 90% images respectively. 
 Significantly different distributions of PD<sub>mean</sub> values for each image
 are observed. The PD<sub>mean</sub> values for the magenta objects in the 10% colocalization image
@@ -179,7 +176,7 @@ colocalization (e.g. 50%-60% in **supp fig**).
 
 By contrast, neither the average (**fig 2f**) or median (**supp fig1**)
 PD<sub>min</sub> (edge-edge) distances can reliably identify increasing 
-colocalization. Average PDmin (edge-edge) 
+colocalization. Average PD<sub>min</sub> (edge-edge) 
 values do not decrease with increasing ground-truth 
 % colocalization. The median PD<sub>min</sub> (edge-edge) distance for all 
 ground-truth colocalization conditions is 0 pixel and thus is not capable of 
@@ -192,7 +189,7 @@ colocalization values. The red channel in the CBS Data Set 1 is displayed in
 magenta for better visualization. 
 **(B)** PD<sub>mean</sub> values for each of the red/magenta objects in **(A)**. 
 P-values were assessed using students t-test \*\*\*\*  = P<0.001. **(C-F)** The average 
-PD<sub>mean/median/max</sub> & edge-edge measurements +/- 95% CI for each object in 
+PD<sub>mean/median/max</sub> & edge-edge measurements $`\pm`$ 95% CI for each object in 
 the red channel of the CBS dataset 1.*
 
 ### Example 2 - Fluorescent 3D confocal microscopy & PyDist reveals escape of S. aureus from LAMP-1 positive vesicles at a 24h timepoint
@@ -206,57 +203,93 @@ occur in which the nascent phagosome rapidly changes its membrane composition
 and inter-luminal contents to form a microbicidal compartment termed the 
 phagolysosome.  Whether or not bacteria reside within the mature phagolysosome 
 during infection provides important information about the bacteria’s mechanisms
-of immune evasion. 
-
-Lysosome-Associated-Membrane-Protein 1 (LAMP1) is a regularly utilized marker 
-of the phagolysosome. A ‘halo’ of LAMP-1 around a bacterium as shown in fig(x) 
-indicates the localization of the bacteria within a phagolysosome. Typically, 
-analyses of the extent of LAMP-1 encapsulation around bacteria are user-defined
-binary measures; manually counting the number of positive/negatively 
+of immune evasion. Lysosome-Associated-Membrane-Protein 1 (LAMP1) is a regularly utilized marker 
+of the phagolysosome.  Overlap in fluorescent signal is not expected between 
+these biomarkers. Instead, a ‘halo’ of LAMP-1 around a bacterium (**fig 3b**) 
+indicates the localization of the bacteria within a phagolysosome. 
+Typically, analyses of the extent of LAMP-1 encapsulation around bacteria are 
+user-definedbinary measures; manually counting the number of positive/negatively 
 LAMP-1-associated bacteria in a dataset of blinded images [4](#4)-[8](#8). 
-This method of analysis raises issues of reproducibility due to the somewhat
-subjective nature of defining what amount of LAMP-1 association equates to a 
-positively LAMP-1 associated bacteria. The binary nature of the analysis may 
-also result in the loss of important information as small but significant 
-changes in the extent of bacterial encapsulation by LAMP-1 may not be 
-identifiable by eye. PyDist provides an unbiased, quantitative means of 
-assessing the association of bacteria to cellular compartment markers. 
+This method of analysis is time-consuming and raises issues of reproducibility.
+Defining what amount of LAMP-1 association equates to a positively LAMP-1 
+associated bacteria is subjective and may vary from researcher to researcher. 
+The binary nature of the analysis may also result in the loss of important 
+information as small but significant changes in the extent of bacterial 
+encapsulation by LAMP-1 may not be identifiable by eye. 
 
 The capacity of Staphylococcus aureus to survive for extended periods of time
 within macrophages has become increasingly apparent 
 [3](#3)–[5](#5),[6](#6),[7](#7). Recent work indicates a capacity of S. aureus 
 to survive and even replicate within LAMP-1 positive vesicles 1,2. Escape of 
 S. aureus strains from the phagolysosomes of THP-1 cells and primary human
-macrophages has also been reported (references   1/2 respectively). We prepared
+macrophages has also been reported (references 1/2 respectively). We prepared
 an infection model of the S. aureus MSSA476 strain in the J774A.1 murine 
 macrophage cell line. At early (1.5hr) and late (24hr) timepoints, LAMP-1 
 encapsulation of mCherry tagged S. aureus MSSA476 was captured by 
-immunofluorescence z-stack confocal microscopy.
+immunofluorescence Z-stack confocal microscopy. Example images of positively
+and weakly LAMP-1-associated bacteria are shown in **fig 3a**.
 
-Analysis of this data was initially performed by blinding images and manually
-counting how the % of LAMP-1 encapsulated bacteria is altered between timepoints 
-(**fig**). There is a large reduction in the percentage of LAMP-1 associated 
-bacteria at the late compared to early timepoint. The same data was then analysed
-by PyDist. As shown in (**fig**), the PD<sub>mean</sub> for individual S. aureus are 
-significantly smaller at 1.5hrs then at 24hrs. This 
-
-Thus, in this infection model, PyDist3D analysis suggests that S. aureus MSSA476 
-is significantly less likely to be encapsulated by LAMP-1 at late compared to 
-early timepoints. This appears to be consistent with previous findings that 
-S. aureus is capable of escape from the phagolysosome [4](#4),[9](#9).
+The PD<sub>mean</sub> for each bacterial cluster in 3D space 
+at early and late timepoints 
+was calculated in PyDist relative to LAMP-1 fluorescence. **Fig 3b** shows a 
+swarm plot of these measurements. Notably, a larger number of 
+bacterial clusters were detected by PyDist at the 24 hr timepoint then 
+at the 1.5hr timepoint (**number**). An increase in the average PD<sub>mean</sub> 
+is seen for the 24hr timepoint compaired to the 1.5 hr timepoint (**insert mean
+$`\pm`$ error here**). These PD<sub>mean</sub> values are displayed in **fig3b** 
+as a frequency distribution. Clear differences in the percentage distribution of 
+bacterial PD<sub>mean's</sub> can be observed at the early and late timepoints. 
+The percentage distribution of PD<sub>mean</sub> values at 1.5 hrs has a 
+positive skew with a peak between 0-0.0325 $`\mu m`$. By contrast, at the 24 hr 
+timepoint, PD<sub>mean</sub> values appear to have a normal distribution, 
+with a peak between 0.125-0.250 $`\mu m`$. Thus, in this infection model, 
+PyDist analysis suggests that _S. aureus_ MSSA476 is less likely to be found
+encapsulated by LAMP-1 at late compared to early timepoints. This is
+consistent with previous findings that _S. aureus_ is capable of escape from
+LAMP-1 positive vesicles [4](#4),[9](#9).
 
 ![**Fig 3 PyDist3D identifys the escape of S. aureus from LAMP-1 positive vesicles**](paper/figures/LAMP-1_Fig_121119.png)
 **Fig 3 PyDist3D identifys the escape of _S. aureus_ from LAMP-1 positive vesicles**
 **(A)** Representative examples of _S. aureus_ with strong and weak LAMP-1 
-associations. An unshark mask pre-filtering operation has been applied
-to the LAMP-1 channel of these images to enable better object detection.
+associations. A single slice of a Z-stack is shown. An unshark mask pre-filtering
+operation has been applied to the LAMP-1 channel of these images to enable better object detection.
 **(B)** All PD<sub>mean</sub> values for each detected _S. aureus_ object relative
 to LAMP-1 positive signal across early (1.5 hr) and late (24 hr) timepoints
 **(C)** The _S. aureus_ PD<sub>mean</sub> values for early and late timepoints 
 from **(B)** displayed as a frequency distribution.
 
+## Conclusion
+
+In this paper we introduced PyDist: a user friendly open-source image-analysis tool 
+that quantifies the relative spatial localization of fluorescent objectsin 2D 
+and 3D immunofluorescent microscopy datasets. 
+We have also suggested a set of new measurements to describe the relative 
+spatial colocalization of these fluorescent objects (PD<sub>mean</sub>,
+PD<sub>median</sub> & PD<sub>max</sub>). These metrics appear to have a strong
+capacity to accurately describe ground-truth colocalization values (**fig**). 
+PD<sub>mean</sub> in particular was highly consistent in its ability to identify 
+known increases in % colocalization. 
+
+The applicability of PyDist analysis to make biological relevant observations 
+was then assessed. Using the PD<sub>mean</sub> metric, we were able to 
+identify significant differences in the colocalization of _S. aureus_ with a 
+marker of an intracellular compartment at early and late timepoints. These 
+observations were confirmed by blinded manual analyses. Traditional pixel-
+based measures of colocalization such as Manders and Pearsons coefficients were 
+not capable of identifying these differences. Collectively these 
+results suggest that PyDist analysis and the perimeter distance (PD) measurements 
+described in this paper can function as a powerful means of analysing the
+relative spatial colocalization of fluorescent biomakers. 
 
 ## Results References
+<a name="1">1.</a> Bolte, S. & Cordelières, F. P. A guided tour into subcellular 
+colocalization analysis in light microscopy. J. Microsc. 224, 213–232 (2006).
+
+<a name="2">1.</a> van der Walt, S. et al. scikit-image: image processing in 
+Python. PeerJ 2, e453 (2014).
+
+<a name="3">2.</a> Otsu, N. A Threshold Selection Method from Gray-Level 
+Histograms. IEEE Trans. Syst. Man. Cybern. 9, 62–66 (1979).
 
 <a name="4">3.</a> Flannagan, R. S., Heit, B. & Heinrichs, D. E. Intracellular
 replication of Staphylococcus aureus in mature phagolysosomes in macrophages 
@@ -285,27 +318,4 @@ doi:10.1111/cmi.12233
 <a name="10">9.</a> Kubica, M. et al. A Potential New Pathway for Staphylococcus 
 aureus Dissemination: The Silent Survival of S. aureus Phagocytosed by Human 
 Monocyte-Derived Macrophages. PLoS One 3, e1409 (2008).
-
-## Conclusion
-
-In this paper we introduced PyDist: a user friendly open-source image-analysis tool 
-that quantifies the relative spatial localization of fluorescent objectsin 2D 
-and 3D immunofluorescent microscopy datasets. 
-We have also suggested a set of new metrics to describe the relative 
-spatial colocalization of these fluorescent objects (PD<sub>mean</sub>,
-PD<sub>median</sub> & PD<sub>max</sub>). These metrics appear to have a strong
-capacity to accurately describe ground-truth colocalization values (**fig**). 
-PD<sub>mean</sub> in particular was highly consistent in its ability to identify 
-known increases in % colocalization. 
-
-The applicability of PyDist analysis to make biological relevant observations 
-was then assessed. Using the PD<sub>mean</sub> metric, we were able to 
-identify significant differences in the colocalization of _S. aureus_ with a 
-marker of an intracellular compartment at early and late timepoints. These 
-observations were confirmed by blinded manual analyses. Traditional pixel-
-based measures of colocalization such as Manders and Pearsons coefficients were 
-not capable of identifying these differences. Collectively these 
-results suggest that PyDist analysis and the perimeter distance (PD) metrics 
-described in this paper can function as a powerful means of analysing the
-relative spatial colocalization of fluorescent biomakers. 
 
