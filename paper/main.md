@@ -23,7 +23,7 @@ module written in python that uses distance measurements to describe the
 relationships between biomarkers in 2D or 3D space. Analysis of co-localization
 by distance measurements is not a novel concept. For example, an excellent tool 
 implemented in ImageJ called DiAna allows for the detailed distance-based 
-analysis of pairs of differently labelled fluorescent objects (**ref**). The core 
+analysis of pairs of differently labelled fluorescent objects [2](#2). The core 
 advantages that PyDist brings include improved speed affording a high aptitude 
 for the batch distance-based colocalization analysis of large 2D and 3D 
 immunofluorescent datasets, as well as the extensibility of being written in a 
@@ -31,7 +31,7 @@ much easier to learn language like Python, compared with e.g. Java or C++.
 
 This paper also defines a set of descriptive measurements that quantify the spatial
 relationship of each object in fluorescent channel X to objects in fluorescent
-channel Y. Perimeter Distance (PD) measurements are defined in **PyDist_explanation fig** 
+channel Y. Perimeter Distance (PD) measurements are defined in **Fig 1** 
 and detailed extensively in the methods section. In brief, objects in one 
 fluorescent channel are detected and the perimeter pixels around the object 
 determined. The distance of each pixel in an object's perimeter to the nearest
@@ -53,36 +53,35 @@ perimeter voxels (illustrated as light-blue boxes) have been identified for the
 blue object. The numbers in the centre of each perimeter-voxel refer to PD
 measurements: the shortest distance from the perimeter-voxel to the nearest red
 fluorescent signal. The mean and median of all of these PD measurements gives
-the PDmean and PDmedian measurements respectively. The largest
-and smallest of these PD measurements gives the PDmax and
-PDmin(“edge-edge”) distances respectively.*
+the PD<sub>mean</sub> and PD<sub>median</sub> measurements respectively. The largest
+and smallest of these PD measurements gives the PD</sub>max</sub> and
+edge-edge distances respectively.*
 
 # Methods
 
 ### 1. Macrophage infection assay procedure
 
 J774A.1 cells were routinely cultured in DMEM containing 4500mg/L glucose and 
-10% FBS and incubated at 37°C with 5% CO 2 . 2.5 x10 5 cells were seeded in 24 
-well plates containing glass coverslips and grown overnight. Cells were washed 
+10% FBS and incubated at 37°C with 5% CO<sub>2</sub>. 3 replicate wells were 
+seeded with 2.5 x 10<sup>5</sup> cells in 24 well plates containing 
+glass coverslips and grown overnight. Cells were washed 
 2x with PBS before inoculating with S. aureus MSSA476 carrying the pRN11 
-(mCherry) expression plasmid (available from) at a MOI of 1. Infection was 
+(mCherry) expression plasmid at a MOI of 1. Infection was 
 allowed to proceed for 2hrs, before washing with PBS and treating with 
 100µg/ml gentamicin in DMEM for 1hr to kill extracellular bacteria. Cells were 
 then washed 3x with PBS and DMEM containing 10µg/ml gentamicin added to 
 prevent bacterial outgrowth. At relevant timepoints, cells were washed with PBS 
-and fixed with 4% paraformaldehyde for 10min at 37°C. Cells were washed with 
-PBS and blocked/permeabilized in a PBS solution containing 0.2% saponin & 
-5% bovine serum albumin (BSA). Cells were washed in PBS, overlaid with primary 
+and fixed with 4% paraformaldehyde for 10 min at 37°C. Cells were washed with 
+PBS and blocked/permeabilized in a PBS solution containing 0.2 % saponin & 
+5 % bovine serum albumin (BSA). Cells were washed in PBS, overlaid with primary 
 antibody (1:100 inblocking/permeabilization solution) and incubated overnight 
 at 4°C. Cells were extensively washed in PBS then overlaid with secondary 
 antibody (1:400 in blocking/permeabilization solution) for 1hr before washing 
-in PBS and mounting on slides containing prolong gold.
+in PBS and mounting on slides containing prolong gold. Mounted samples were 
+imaged using a Zeiss LSM 880 laser scanning microscope using a 100x oil 
+immersion objective (NA 1.4). 5 Z-stacks images were taken per technical 
+replicate with a step size of 0.75$`\mu m`$. 
 
-### 2. Confocal microscopy
-
-Mounted samples were imaged using the Zeiss LSM 880 laser scanning microscope. 
-**(ask Ana for details). Detail of aperture, magnification, z-stack distance 
-etc.** 
 
 ### 3. Fluorescent object detection
 
@@ -96,10 +95,10 @@ of `1` is used to reduce single-pixel scale noise prior to object detection.
 Following pre-processing, binary 2D/3D arrays are generated to define regions 
 containing ‘on’ (1) and ‘off’ (0) pixels representing positive and 
 negative signal. PyDist provides a range of thresholding methods from the 
-scikit-image package to define positive and negative signal [2](#2). 
+scikit-image package to define positive and negative signal [3](#3). 
 A comparison operator is then used to generate binary 2D/3D images. Unless 
 specified otherwise, the Otsu thresholding method is used in the examples 
-presented in this paper [3](#3). Alternatively, users can provide PyDist with 
+presented in this paper [4](#4). Alternatively, users can provide PyDist with 
 binary images that have been previously thresholded in another program. 
 Connected regions of ‘on’ pixels are then labelled as unique objects using the 
 `scipy.ndimage.label` function. Size exclusion criteria can then be used to 
@@ -127,17 +126,6 @@ in which the mean of each perimeter pixel of an object in channel X's
 distance to the nearest _on_ pixel in channel Y is calculated. Minimum and 
 maximum distances from objects in channel X to the nearest object in channel Y 
 are also generated.
-
-### Methods References
-
-<a name="1">1.</a> Bolte, S. & Cordelières, F. P. A guided tour into subcellular 
-colocalization analysis in light microscopy. J. Microsc. 224, 213–232 (2006).
-
-<a name="2">1.</a> van der Walt, S. et al. scikit-image: image processing in 
-Python. PeerJ 2, e453 (2014).
-
-<a name="3">2.</a> Otsu, N. A Threshold Selection Method from Gray-Level 
-Histograms. IEEE Trans. Syst. Man. Cybern. 9, 62–66 (1979).
 
 # Results Section
 
@@ -209,7 +197,7 @@ these biomarkers. Instead, a ‘halo’ of LAMP-1 around a bacterium (**fig 3b**
 indicates the localization of the bacteria within a phagolysosome. 
 Typically, analyses of the extent of LAMP-1 encapsulation around bacteria are 
 user-definedbinary measures; manually counting the number of positive/negatively 
-LAMP-1-associated bacteria in a dataset of blinded images [4](#4)-[8](#8). 
+LAMP-1-associated bacteria in a dataset of blinded images [5](#5)-[9](#9). 
 This method of analysis is time-consuming and raises issues of reproducibility.
 Defining what amount of LAMP-1 association equates to a positively LAMP-1 
 associated bacteria is subjective and may vary from researcher to researcher. 
@@ -219,7 +207,7 @@ encapsulation by LAMP-1 may not be identifiable by eye.
 
 The capacity of Staphylococcus aureus to survive for extended periods of time
 within macrophages has become increasingly apparent 
-[3](#3)–[5](#5),[6](#6),[7](#7). Recent work indicates a capacity of S. aureus 
+[4](#4)–[6](#6),[7](#7),[8](#8). Recent work indicates a capacity of S. aureus 
 to survive and even replicate within LAMP-1 positive vesicles 1,2. Escape of 
 S. aureus strains from the phagolysosomes of THP-1 cells and primary human
 macrophages has also been reported (references 1/2 respectively). We prepared
@@ -246,7 +234,7 @@ with a peak between 0.125-0.250 $`\mu m`$. Thus, in this infection model,
 PyDist analysis suggests that _S. aureus_ MSSA476 is less likely to be found
 encapsulated by LAMP-1 at late compared to early timepoints. This is
 consistent with previous findings that _S. aureus_ is capable of escape from
-LAMP-1 positive vesicles [4](#4),[9](#9).
+LAMP-1 positive vesicles [5](#5),[10](#10).
 
 ![**Fig 3 PyDist3D identifys the escape of S. aureus from LAMP-1 positive vesicles**](paper/figures/LAMP-1_Fig_121119.png)
 **Fig 3 PyDist3D identifys the escape of _S. aureus_ from LAMP-1 positive vesicles**
@@ -285,37 +273,44 @@ relative spatial colocalization of fluorescent biomakers.
 <a name="1">1.</a> Bolte, S. & Cordelières, F. P. A guided tour into subcellular 
 colocalization analysis in light microscopy. J. Microsc. 224, 213–232 (2006).
 
-<a name="2">1.</a> van der Walt, S. et al. scikit-image: image processing in 
+<a name="2">2.</a> Gilles, J.-F., Dos Santos, M., Boudier, T., Bolte, S. & 
+Heck, N. DiAna, an ImageJ tool for object-based 3D co-localization 
+and distance analysis. Methods 115, 55–64 (2017).
+
+<a name="3">3.</a> van der Walt, S. et al. scikit-image: image processing in 
 Python. PeerJ 2, e453 (2014).
 
-<a name="3">2.</a> Otsu, N. A Threshold Selection Method from Gray-Level 
+<a name="4">2.</a> Otsu, N. A Threshold Selection Method from Gray-Level 
 Histograms. IEEE Trans. Syst. Man. Cybern. 9, 62–66 (1979).
 
-<a name="4">3.</a> Flannagan, R. S., Heit, B. & Heinrichs, D. E. Intracellular
+<a name="5">5.</a> Flannagan, R. S., Heit, B. & Heinrichs, D. E. Intracellular
 replication of Staphylococcus aureus in mature phagolysosomes in macrophages 
 precedes host cell death, and bacterial escape and dissemination. 
 Cell. Microbiol. 18, 514–535 (2016).
 
-<a name="5">4.</a> Jubrail, J. et al. Inability to sustain intraphagolysosomal
+<a name="6">6.</a> Jubrail, J. et al. Inability to sustain intraphagolysosomal
 killing of Staphylococcus aureus predisposes to bacterial persistence in 
 macrophages. Cell. Microbiol. 18, 80–96 (2016).
 
-<a name="6">5.</a> Surewaard, B. G. J. et al. Identification and treatment of 
+<a name="7">7.</a> Surewaard, B. G. J. et al. Identification and treatment of 
 the Staphylococcus aureus reservoir in vivo. J. Exp. Med. 213, 1141–51 (2016).
 
-<a name="7">6.</a>.	Custódio, R. et al. Characterization of secreted 
+<a name="8">8.</a>.	Custódio, R. et al. Characterization of secreted 
 sphingosine-1-phosphate lyases required for virulence and intracellular
 survival of Burkholderia pseudomallei. Mol. Microbiol. 102, 1004–1019 (2016).
 
-<a name="8">7.</a> Dallenga, T. et al. M. tuberculosis-Induced Necrosis of 
+<a name="9">9.</a> Dallenga, T. et al. M. tuberculosis-Induced Necrosis of 
 Infected Neutrophils Promotes Bacterial Growth Following Phagocytosis by 
 Macrophages. Cell Host Microbe 22, 519-530.e3 (2017).
 
-<a name="9">8.</a> Grosz, M. et al. Cytoplasmic replication of Staphylococcus
+<a name="10">10.</a> Grosz, M. et al. Cytoplasmic replication of Staphylococcus
 aureus upon phagosomal escape triggered by phenol-soluble modulin α. 
 doi:10.1111/cmi.12233
 
-<a name="10">9.</a> Kubica, M. et al. A Potential New Pathway for Staphylococcus 
+<a name="11">11.</a> Kubica, M. et al. A Potential New Pathway for Staphylococcus 
 aureus Dissemination: The Silent Survival of S. aureus Phagocytosed by Human 
 Monocyte-Derived Macrophages. PLoS One 3, e1409 (2008).
+
+
+## Supplemental Figures. 
 
