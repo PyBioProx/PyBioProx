@@ -16,21 +16,12 @@ the fluorescently-tagged biomarkers can be assessed. A simplistic analysis
 of colocalization may involve overlaying two fluorescent channels and manually 
 identifying regions of fluorescent overlap as colocalization. A range of 
 more quantitative co-localization analyses exist ranging in complexity
-that can provide more robust quantification ([1](#1)). In this paper, 
-we introduce PyDist; a user-friendly object-based colocalization 
-module written in python that uses distance measurements to describe the 
-relationships between biomarkers in 2D or 3D space. Analysis of co-localization
-by distance measurements is not a novel concept. For example, a tool 
-implemented in ImageJ called DiAna allows for the detailed distance-based 
-analysis of pairs of differently labelled fluorescent objects [2](#2). The core 
-advantages that PyDist brings include improved speed affording a high aptitude 
-for the batch distance-based colocalization analysis of large 2D and 3D 
-immunofluorescent datasets, as well as the extensibility of being written in a 
-much easier to learn language like Python, compared with e.g. Java or C++. 
+that can provide more robust quantification ([1](#1)). 
 
-This paper also defines a set of descriptive measurements that quantify the spatial
-relationship of each object in fluorescent channel X to objects in fluorescent
-channel Y. Perimeter Distance (PD) measurements are defined in _Fig 1_ 
+This paper formally defines a set of simple descriptive measurements 
+that quantify the spatial relationship of each object in fluorescent 
+channel X to objects in fluorescent channel Y. 
+Perimeter Distance (PD) measurements are defined in _Fig 1_ 
 and detailed extensively in the methods section. In brief, objects in one 
 fluorescent channel are detected and the perimeter pixels around the object 
 determined. The distance of each pixel in an object's perimeter to the nearest
@@ -40,9 +31,21 @@ The units of this distance may be pixels/voxels or in real-world units
 object in channel 1 to objects in channel 2 can now be described by taking the
 mean, median, maximum or minimum of these PD measurements 
 (to give the PD<sub>mean/median/max</sub> or "edge-edge" measurements respectively.
-We show that these measurements can function as alternatives to traditional measurements 
-of co-localization such as Manders/Persons coefficients, and can provide 
+We show that these measurements can provide 
 powerful insights into the relative spatial distributions of fluorescent biomarkers.
+(_Fig 2, Fig 3_)
+
+We also introduce PyDist; a user-friendly object-based colocalization 
+module written in python that generates PD measurements to describe the 
+relationships between biomarkers in 2D or 3D space. Analysis of co-localization
+by distance measurements is not a novel concept. For example, a tool 
+implemented in ImageJ called DiAna allows for the distance-based 
+analysis of pairs of differently labelled fluorescent objects [2](#2). The core 
+advantages that PyDist brings include improved speed affording a high aptitude 
+for the batch distance-based colocalization analysis of large 2D and 3D 
+immunofluorescent datasets, as well as the extensibility of being written in a 
+much easier to learn language like Python, compared with e.g. Java or C++. 
+
 
 ![**Fig 1 PD Measurements Explanation**](paper/figures/PyDist_explanation_figure.png)
 ***Fig 1 - PD Measurements** A hypothetical example is 
@@ -89,17 +92,15 @@ PyDist computes distances between labelled objects in separate fluorescence
 channels. Prior to detection of fluorescent objects, different pre-processing 
 steps may be performed to improve detection accuracy. PyDist provides a 
 limited number of pre-processing options derived from the `scipy.ndimage` 
-package. Image data in _fig 3_ was pre-processed with an unsharp 
-mask in imageJ to enhance image sharpness followed by processing with a 
-multidimensional Gaussian filter (`scipy.ndimage.gaussian_filter`) at a sigma 
-of `1` in PyDist is used to reduce single-pixel scale noise prior to object detection. 
+package. Alternatively, pre-processing of images can be performed in another program 
+such as ImageJ and then transfered to PyDist.
 Following pre-processing, binary 2D/3D arrays are generated to define regions 
 containing ‘on’ (1) and ‘off’ (0) pixels representing positive and 
 negative signal. PyDist provides a range of thresholding methods from the 
-scikit-image package to define positive and negative signal [3](#3). 
-A comparison operator is then used to generate binary 2D/3D images. Unless 
-specified otherwise, the Otsu thresholding method is used in the examples 
-presented in this paper [4](#4). Alternatively, users can provide PyDist with 
+scikit-image package to define positive and negative signal [3](#3). The Otsu 
+thresholding method is used in the examples presented in this paper [4](#4)
+A comparison operator is then used to generate binary 2D/3D images. 
+Alternatively, users can provide PyDist with 
 binary images that have been previously thresholded in another program. 
 Connected regions of ‘on’ pixels are then labelled as unique objects using the 
 `scipy.ndimage.label` function. Size exclusion criteria can then be used to 
@@ -235,7 +236,7 @@ of `1` in PyDist to reduce single-pixel scale noise prior to object detection.
 
 Following pre-processing, the PD<sub>mean</sub> for each bacterial cluster in 3D space 
 at early and late timepoints 
-were calculated in PyDist relative to LAMP-1 fluorescence. _Fig 3B_ shows a 
+was calculated in PyDist relative to LAMP-1 fluorescence. _Fig 3B_ shows a 
 swarm plot of these measurements. Notably, a larger number of 
 bacterial clusters were detected by PyDist at the 24 hr timepoint then 
 at the 1.5hr timepoint. A 2.44 fold increase in the mean PD<sub>mean</sub> 
