@@ -1,6 +1,6 @@
 # Title
 
-PyPerDis: Distance-based Image Analysis in Python and Perimeter Distance Measurements to Describe the
+PyDist: Distance-based Image Analysis in Python and Perimeter Distance Measurements to Describe the
 Spatial Distributions of Fluorescent Objects.
 
 # Introduction
@@ -10,18 +10,17 @@ employed method to infer meaningful biological interactions within cells. By
 labelling two or more biomarkers with distinct fluorescent tags, the 
 biomarkers can be visualized by immunofluorescence microscopy methods. 
 Taking single or multiple images along the Z-axis in the same X/Y axes 
-(referred to as a z-stack) allows the distribution of the biomarkers in 2D or 
+(referred to as a Z-stack) allows the distribution of the biomarkers in 2D or 
 3D space to be observed. Once images are captured, the relationship between 
 the fluorescently-tagged biomarkers can be assessed. A simplistic analysis 
 of colocalization may involve overlaying two fluorescent channels and manually 
 identifying regions of fluorescent overlap as colocalization. A range of 
-more sophisticated automated co-localization analyses exist, and can be broadly 
-grouped into pixel-based and object-based methods [1](#1).
-
-In this paper, we introduce PyDist; a user-friendly object-based colocalization 
+more quantitative co-localization analyses exist ranging in complexity
+that can provide more robust quantification ([1](#1)). In this paper, 
+we introduce PyDist; a user-friendly object-based colocalization 
 module written in python that uses distance measurements to describe the 
 relationships between biomarkers in 2D or 3D space. Analysis of co-localization
-by distance measurements is not a novel concept. For example, an excellent tool 
+by distance measurements is not a novel concept. For example, a tool 
 implemented in ImageJ called DiAna allows for the detailed distance-based 
 analysis of pairs of differently labelled fluorescent objects [2](#2). The core 
 advantages that PyDist brings include improved speed affording a high aptitude 
@@ -31,7 +30,7 @@ much easier to learn language like Python, compared with e.g. Java or C++.
 
 This paper also defines a set of descriptive measurements that quantify the spatial
 relationship of each object in fluorescent channel X to objects in fluorescent
-channel Y. Perimeter Distance (PD) measurements are defined in **Fig 1** 
+channel Y. Perimeter Distance (PD) measurements are defined in _Fig 1_ 
 and detailed extensively in the methods section. In brief, objects in one 
 fluorescent channel are detected and the perimeter pixels around the object 
 determined. The distance of each pixel in an object's perimeter to the nearest
@@ -40,11 +39,11 @@ The units of this distance may be pixels/voxels or in real-world units
 (e.g. µm/nm) if pixel/voxel dimensions are known. The relative distance of this 
 object in channel 1 to objects in channel 2 can now be described by taking the
 mean, median, maximum or minimum of these PD measurements 
-(to give PD<sub>mean/median/max</sub> or "edge-edge" measurements respectively.
+(to give the PD<sub>mean/median/max</sub> or "edge-edge" measurements respectively.
 We show that these measurements can function as alternatives to traditional measurements 
 of co-localization such as Manders/Persons coefficients, and can provide 
 powerful insights into the relative spatial distributions of fluorescent biomarkers.
-``
+
 ![**Fig 1 PD Measurements Explanation**](paper/figures/PyDist_explanation_figure.png)
 ***Fig 1 - PD Measurements** A hypothetical example is 
 shown in which the distance-based colocalization of a
@@ -54,7 +53,7 @@ blue object. The numbers in the centre of each perimeter-voxel refer to PD
 measurements: the shortest distance from the perimeter-voxel to the nearest red
 fluorescent signal. The mean and median of all of these PD measurements gives
 the PD<sub>mean</sub> and PD<sub>median</sub> measurements respectively. The largest
-and smallest of these PD measurements gives the PD</sub>max</sub> and
+and smallest of these PD measurements gives the PD<sub>max</sub> and
 edge-edge distances respectively.*
 
 # Methods
@@ -80,7 +79,8 @@ antibody (1:400 in blocking/permeabilization solution) for 1hr before washing
 in PBS and mounting on slides containing prolong gold. Mounted samples were 
 imaged using a Zeiss LSM 880 laser scanning microscope using a 100x oil 
 immersion objective (NA 1.55). 5 Z-stack images were taken per technical 
-replicate with a step size of 0.75µm.
+replicate with a step size of 0.75µm. Images are available at the Image Data
+Resource (IDR number: )
 
 
 ### 3. Fluorescent object detection
@@ -89,9 +89,10 @@ PyDist computes distances between labelled objects in separate fluorescence
 channels. Prior to detection of fluorescent objects, different pre-processing 
 steps may be performed to improve detection accuracy. PyDist provides a 
 limited number of pre-processing options derived from the `scipy.ndimage` 
-package. In the examples presented in this paper, pre-processing with a 
+package. Image data in _fig 3_ was pre-processed with an unsharp 
+mask in imageJ to enhance image sharpness followed by processing with a 
 multidimensional Gaussian filter (`scipy.ndimage.gaussian_filter`) at a sigma 
-of `1` is used to reduce single-pixel scale noise prior to object detection. 
+of `1` in PyDist is used to reduce single-pixel scale noise prior to object detection. 
 Following pre-processing, binary 2D/3D arrays are generated to define regions 
 containing ‘on’ (1) and ‘off’ (0) pixels representing positive and 
 negative signal. PyDist provides a range of thresholding methods from the 
@@ -106,7 +107,7 @@ filter the identified objects for a particular size. In this study, objects
 smaller than 10 connected pixels are considered to be noise and are thus 
 removed. A binary erosion of the labelled objects is then employed to identify 
 its perimeter pixels. Finally, overlays of the detected object’s perimeter on 
-(user-defined)representative z-slices of the original image are generated to 
+(user-defined) representative z-slices of the original image are generated to 
 allow for confirmation that fluorescent objects have been appropriately 
 labelled.
 
@@ -137,43 +138,41 @@ an online database of 2D computer-simulated images with pre-defined
 To validate the capacity of this approach to detect changes in colocalization, 
 we utilized Image Set 1 from the CBS. Images 
 were processed using PyDist as described in the methods section. Example CBS images
-with ground-truth colocalization values of 10%, 50% and 90% are shown in 
-**fig 2a**. In **fig 2b**, the PD<sub>mean</sub> for each fluorescent
+with ground-truth colocalization values of 10%, 50% and 90% are shown 
+(_Fig 2A_). The PD<sub>mean</sub> for each fluorescent
 object in channel 1 relative to the fluorescence in channel 2 in the 10%, 50% 
-and 90% images is plotted.
-1544, 1592 and 1588 objects in channel 1 were detected for the 10%, 50% and 90%
-images respectively. 
+and 90% images were calculated (_Fig 2B_). 1544, 1592 and 1588 objects in channel 1 were 
+detected for the 10%, 50% and 90% images respectively. 
 Significantly different distributions of PD<sub>mean</sub> values for each image
 are observed. The PD<sub>mean</sub> values for the magenta objects in the 10% colocalization image
 have a wide distribution, with PD<sub>mean</sub> values that cluster between
-5 and 10 pixels. Contrastingly, PD<sub>mean</sub> values for the magenta objects 
+5 and 10 pixels  Contrastingly, PD<sub>mean</sub> values for the magenta objects 
 of the 50% and 90% (ground-truth) colocalization condition cluster progressively
-nearer to 0 pixels reflecting the higher degree of colocalization. 
+nearer to 0 pixels reflecting the higher degree of colocalization (_Fig 2B_). 
 
-In _Figs 2C-F_ , the mean PD<sub>mean</sub>, PD<sub>median</sub>, 
+The mean PD<sub>mean</sub>, PD<sub>median</sub>, 
 PD<sub>max</sub> and edge-edge distance measurements of the 
-objects in the red channel of CBS dataset 1 are plotted to visualize how
+objects in the red channel of CBS dataset 1 are plotted (_Figs 2C-F_)
+to visualize how
 they may result in different interpretations. As expected, the mean
 PD<sub>mean/median/max</sub> values for each image decreases as ground truth
-% colocalization increases. For both the 80% and 90% co-localization images, 
-the median PD<sub>mean/median/max</sub> value is 0 pixels, 
-thus not allowing for differentiation of these images. In
-_supp. Fig 1 & 2_, CBS data sets 2 and 3 are analysed. Similarly, the mean 
+% colocalization increases. In
+_Supp. Fig 1 & 2_, CBS data sets 2 and 3 are analysed. Similarly, the mean 
 PD<sub>mean/median/max</sub> values consistantly decrease as ground truth %
 colocalization increases. This demonstrates that PD<sub>mean/median/max</sub>
 measurements are sufficient to identify ground-truth colocalization differences in 
-a 2D computer-generated image dataset.  By contrast, mean edge-edge values 
-do not decrease with increasing ground-truth % colocalization (_Fig 2F_)
-distances cannot reliably identify changes in ground-truth colocalization. Similar
-results are seen by analysis of CBS datasets 2 & 3 (_Supp Fig 1d, Supp Fig 2D_).
+a 2D computer-generated image dataset.  By contrast, edge-edge values 
+do not decrease on average with increasing ground-truth % colocalization (_Fig 2F_)
+demonstrating that edge-edge distance measurements cannot reliably identify 
+changes in ground-truth colocalization. Similar
+results are seen by analysis of CBS datasets 2 & 3 (_Supp Fig 1D, Supp Fig 2D_).
 The poor performance of the edge-edge measurements presumably reflects 
 the fact that only the closest pixel in a magenta object to green fluorescent
 signal is used in edge-edge measurements. As such, a poorly colocalizing object with a 
 PD<sub>mean</sub> distance of 10 pixels could conceivably have an edge-edge 
 distance of 0 pixels. As the CBS datasets represent crowded images, 
-with large numbers of objects in
-close proximity to one-another, edge-edge distances are inappropriate 
-and likely to give eroneous results. 
+with large numbers of objects in close proximity to one-another, 
+edge-edge distances are inappropriate and likely to give eroneous results. 
 
 
 ![**Fig 2 Colocalization Benchmark Source**](paper/figures/Fig_2_coloc_benchmark_131019.png)
@@ -189,7 +188,7 @@ the magenta channel of the CBS dataset 1.*
 ### Example 2 - Fluorescent 3D confocal microscopy & PyDist reveals escape of S. aureus from LAMP-1 positive vesicles at a 24h timepoint
 
 The internalization of bacteria by innate immune cells such as macrophages is 
-an important mechanism to contain microbial threats (**Refs needed**). 
+an important mechanism to contain microbial threats. 
 Phagocytosis is a complex process involving the internalization of foreign 
 particles such as bacteria and apoptotic cells into a benign compartment 
 termed the nascent phagosome. A complex series of maturation events then 
@@ -197,10 +196,10 @@ occur in which the nascent phagosome rapidly changes its membrane composition
 and inter-luminal contents to form a microbicidal compartment termed the 
 phagolysosome.  Whether or not bacteria reside within the mature phagolysosome 
 during infection provides important information about the bacteria’s mechanisms
-of immune evasion. Lysosome-Associated-Membrane-Protein 1 (LAMP1) is a regularly utilized marker 
-of the phagolysosome.  Significant overlap in fluorescent signal is not expected between 
-bacteria and LAMP-1. Instead, a ‘halo’ of LAMP-1 around a bacterium (**fig 3b**) 
-indicates the localization of the bacteria within a phagolysosome. 
+of immune evasion(**Refs needed**). Lysosome-Associated-Membrane-Protein 1 (LAMP1) is a regularly utilized marker 
+of the phagolysosome [5](#5)-[9](#9).  Significant overlap in fluorescent signal is not expected between 
+bacteria and LAMP-1. Instead, a ‘halo’ of LAMP-1 around a bacterium (_Fig 3A_)
+indicates the localization of the bacteria within a phagolysosome[5](#5)-[9](#9). 
 Typically, analyses of the extent of LAMP-1 encapsulation around bacteria are 
 user-defined binary measures; manually counting the number of positive/negatively 
 LAMP-1-associated bacteria in a dataset of blinded images [5](#5)-[9](#9). 
@@ -221,25 +220,27 @@ an infection model of the S. aureus MSSA476 strain in the J774A.1 murine
 macrophage cell line. At early (1.5hr) and late (24hr) timepoints, LAMP-1 
 encapsulation of mCherry tagged S. aureus MSSA476 was captured by 
 immunofluorescence Z-stack confocal microscopy. Example images of positively
-and weakly LAMP-1-associated bacteria are shown in **fig 3a**.
+and weakly LAMP-1-associated bacteria are shown (_Fig 3A_).
 
 Prior to processing these images in PyDist, the LAMP-1 channel was pre-processed
 by unsharp masking the images in imageJ. Unsharp masking produces a sharpened image 
 by subtracting a blurred copy of the image from the orignial 
 and rescaling the histogram to produce the original contrast in low
 frequncy features. Unsharp masking resulted in a more 
-descrete detection of positive LAMP-1 signal (_fig a_) and a greater capacity
+descrete detection of positive LAMP-1 signal (_Supp. Fig 3A_) and a greater capacity
 to resolve differences in co-localization as evidenced by larger
-PD<sub>mean/median/max</sub> values (_fig b_). 
+PD<sub>mean/median/max</sub> values (_Supp. Fig 3B_). Further pre-processing was performed using a 
+multidimensional Gaussian filter (`scipy.ndimage.gaussian_filter`) at a sigma 
+of `1` in PyDist to reduce single-pixel scale noise prior to object detection.
 
 Following pre-processing, the PD<sub>mean</sub> for each bacterial cluster in 3D space 
 at early and late timepoints 
-was calculated in PyDist relative to LAMP-1 fluorescence. **Fig 3b** shows a 
+were calculated in PyDist relative to LAMP-1 fluorescence. _Fig 3B_ shows a 
 swarm plot of these measurements. Notably, a larger number of 
 bacterial clusters were detected by PyDist at the 24 hr timepoint then 
 at the 1.5hr timepoint. A 2.44 fold increase in the mean PD<sub>mean</sub> 
 is seen for the 24hr timepoint compaired to the 1.5 hr timepoint. 
-These PD<sub>mean</sub> values are displayed in **fig3b** 
+These PD<sub>mean</sub> values are displayed in _Fig 3C_ 
 as a frequency distribution. Clear differences in the percentage distribution of 
 bacterial PD<sub>mean's</sub> can be observed at the early and late timepoints. 
 The percentage distribution of PD<sub>mean</sub> values at 1.5 hrs has a 
@@ -270,18 +271,14 @@ and 3D immunofluorescent microscopy datasets.
 We have also suggested a set of new measurements to describe the relative 
 spatial colocalization of these fluorescent objects (PD<sub>mean</sub>,
 PD<sub>median</sub> & PD<sub>max</sub>). These measurements appear to have a strong
-capacity to accurately describe ground-truth colocalization values (**fig**). 
-PD<sub>mean</sub> in particular was highly consistent in its ability to identify 
-known increases in % colocalization. 
-
-The applicability of PyDist analysis to make biological relevant observations 
+capacity to accurately describe ground-truth colocalization values in a 
+2D dataset(_Fig 2_). The applicability of PyDist analysis to make biological relevant observations 
 was then assessed. Using the PD<sub>mean</sub> measurement, we were able to 
 identify significant differences in the colocalization of _S. aureus_ with a 
-marker of an intracellular compartment at early and late timepoints. These 
-observations were confirmed by blinded manual analyses. Collectively these 
-results suggest that PyDist analysis and the perimeter distance (PD) measurements 
-described in this paper can function as a powerful means of analysing the
-relative spatial colocalization of fluorescent biomakers. 
+marker of an intracellular compartment at early and late timepoints (_Fig 3_). 
+Collectively these results suggest that PyDist analysis and the perimeter 
+distance (PD) measurements described in this paper can function as a powerful 
+means of analysing the relative spatial colocalization of fluorescent biomakers. 
 
 ## Results References
 <a name="1">1.</a> Bolte, S. & Cordelières, F. P. A guided tour into subcellular 
