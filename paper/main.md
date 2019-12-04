@@ -1,6 +1,6 @@
 # Title
 
-PyDist: Distance-based Image Analysis in Python and Perimeter Distance Measurements to Describe the
+PyPerDis: Distance-based Image Analysis in Python and Perimeter Distance Measurements to Describe the
 Spatial Distributions of Fluorescent Objects.
 
 # Introduction
@@ -79,8 +79,8 @@ at 4°C. Cells were extensively washed in PBS then overlaid with secondary
 antibody (1:400 in blocking/permeabilization solution) for 1hr before washing 
 in PBS and mounting on slides containing prolong gold. Mounted samples were 
 imaged using a Zeiss LSM 880 laser scanning microscope using a 100x oil 
-immersion objective (NA 1.4). 5 Z-stacks images were taken per technical 
-replicate with a step size of 0.75$`\mu m`$. 
+immersion objective (NA 1.55). 5 Z-stack images were taken per technical 
+replicate with a step size of 0.75µm.
 
 
 ### 3. Fluorescent object detection
@@ -131,54 +131,60 @@ are also generated.
 
 ### Example 1 - Capacity of different PD measurements to determine colocalization
 
-To validate the capacity of this approach to detect changes in colocalization, 
-we utilized Image Set 1 from the Colocalization Benchmark Source (CBS). Images 
-were processed using PyDist as described in the methods section. CBS is 
+The Colocalization Benchmark Source (CBS) is 
 an online database of 2D computer-simulated images with pre-defined 
-(ground truth) values of co-localization ranging from 0-90%. Example CBS images
+(ground truth) values of co-localization ranging from 0-90
+To validate the capacity of this approach to detect changes in colocalization, 
+we utilized Image Set 1 from the CBS. Images 
+were processed using PyDist as described in the methods section. Example CBS images
 with ground-truth colocalization values of 10%, 50% and 90% are shown in 
 **fig 2a**. In **fig 2b**, the PD<sub>mean</sub> for each fluorescent
-object in channel 1 relative to the fluorescence in channel 2 in the 10%, 50% and 90% images is plotted.
-1544, 1592 and 1588 objects were detected for the 10%, 50% and 90% images respectively. 
+object in channel 1 relative to the fluorescence in channel 2 in the 10%, 50% 
+and 90% images is plotted.
+1544, 1592 and 1588 objects in channel 1 were detected for the 10%, 50% and 90%
+images respectively. 
 Significantly different distributions of PD<sub>mean</sub> values for each image
 are observed. The PD<sub>mean</sub> values for the magenta objects in the 10% colocalization image
 have a wide distribution, with PD<sub>mean</sub> values that cluster between
 5 and 10 pixels. Contrastingly, PD<sub>mean</sub> values for the magenta objects 
-of the 50% and 90% (ground-truth) colocalization condition cluster nearer 0 pixels 
-reflecting the higher degree of colocalization. 
+of the 50% and 90% (ground-truth) colocalization condition cluster progressively
+nearer to 0 pixels reflecting the higher degree of colocalization. 
 
-In **figs 2c-f** , the average PD<sub>mean</sub>, PD<sub>median</sub>, 
-PD<sub>max</sub> and PD<sub>min</sub> (edge-edge) distance measurements of the 
+In _Figs 2C-F_ , the mean PD<sub>mean</sub>, PD<sub>median</sub>, 
+PD<sub>max</sub> and edge-edge distance measurements of the 
 objects in the red channel of CBS dataset 1 are plotted to visualize how
-they may result in different interpretations. As expected, the average
+they may result in different interpretations. As expected, the mean
 PD<sub>mean/median/max</sub> values for each image decreases as ground truth
-% colocalization increases. In **supp fig 1** the median PD<sub>mean/median/max</sub> 
-values are plotted and also decrease with increasing ground truth colocalization. 
-For both the 80% and 90% co-localization images, the median PD<sub>mean/median/max</sub> 
-value is 0 pixels, thus not allowing for differentiation of these images. In
-**supp figs**, CBS data sets 2 and 3 are analysed. Similarly, the mean 
+% colocalization increases. For both the 80% and 90% co-localization images, 
+the median PD<sub>mean/median/max</sub> value is 0 pixels, 
+thus not allowing for differentiation of these images. In
+_supp. Fig 1 & 2_, CBS data sets 2 and 3 are analysed. Similarly, the mean 
 PD<sub>mean/median/max</sub> values consistantly decrease as ground truth %
-colocalization increases. Median PD<sub>mean/median/max</sub> values are less 
-consistent in their ability to identify small differences in ground-truth % 
-colocalization (e.g. 50%-60% in **supp fig**).
+colocalization increases. This demonstrates that PD<sub>mean/median/max</sub>
+measurements are sufficient to identify ground-truth colocalization differences in 
+a 2D computer-generated image dataset.  By contrast, mean edge-edge values 
+do not decrease with increasing ground-truth % colocalization (_Fig 2F_)
+distances cannot reliably identify changes in ground-truth colocalization. Similar
+results are seen by analysis of CBS datasets 2 & 3 (_Supp Fig 1d, Supp Fig 2D_).
+The poor performance of the edge-edge measurements presumably reflects 
+the fact that only the closest pixel in a magenta object to green fluorescent
+signal is used in edge-edge measurements. As such, a poorly colocalizing object with a 
+PD<sub>mean</sub> distance of 10 pixels could conceivably have an edge-edge 
+distance of 0 pixels. As the CBS datasets represent crowded images, 
+with large numbers of objects in
+close proximity to one-another, edge-edge distances are inappropriate 
+and likely to give eroneous results. 
 
-By contrast, neither the average (**fig 2f**) or median (**supp fig1**)
-PD<sub>min</sub> (edge-edge) distances can reliably identify increasing 
-colocalization. Average PD<sub>min</sub> (edge-edge) 
-values do not decrease with increasing ground-truth 
-% colocalization. The median PD<sub>min</sub> (edge-edge) distance for all 
-ground-truth colocalization conditions is 0 pixel and thus is not capable of 
-identifying differences in colocalization.
 
 ![**Fig 2 Colocalization Benchmark Source**](paper/figures/Fig_2_coloc_benchmark_131019.png)
 ***Fig 2 - PD measurments identify known changes in colocalization** 
 **(A)** Representative images of the CBS Data Set 1 with known ground-truth
 colocalization values. The red channel in the CBS Data Set 1 is displayed in 
 magenta for better visualization. 
-**(B)** PD<sub>mean</sub> values for each of the red/magenta objects in **(A)**. 
+**(B)** PD<sub>mean</sub> values for each of the magenta objects in **(A)**. 
 P-values were assessed using students t-test \*\*\*\*  = P<0.001. **(C-F)** The average 
-PD<sub>mean/median/max</sub> & edge-edge measurements $`\pm`$ 95% CI for each object in 
-the red channel of the CBS dataset 1.*
+PD<sub>mean/median/max</sub> & edge-edge measurements $`\pm`$ 95% CI for objects
+the magenta channel of the CBS dataset 1.*
 
 ### Example 2 - Fluorescent 3D confocal microscopy & PyDist reveals escape of S. aureus from LAMP-1 positive vesicles at a 24h timepoint
 
@@ -192,45 +198,54 @@ and inter-luminal contents to form a microbicidal compartment termed the
 phagolysosome.  Whether or not bacteria reside within the mature phagolysosome 
 during infection provides important information about the bacteria’s mechanisms
 of immune evasion. Lysosome-Associated-Membrane-Protein 1 (LAMP1) is a regularly utilized marker 
-of the phagolysosome.  Overlap in fluorescent signal is not expected between 
-these biomarkers. Instead, a ‘halo’ of LAMP-1 around a bacterium (**fig 3b**) 
+of the phagolysosome.  Significant overlap in fluorescent signal is not expected between 
+bacteria and LAMP-1. Instead, a ‘halo’ of LAMP-1 around a bacterium (**fig 3b**) 
 indicates the localization of the bacteria within a phagolysosome. 
 Typically, analyses of the extent of LAMP-1 encapsulation around bacteria are 
-user-definedbinary measures; manually counting the number of positive/negatively 
+user-defined binary measures; manually counting the number of positive/negatively 
 LAMP-1-associated bacteria in a dataset of blinded images [5](#5)-[9](#9). 
 This method of analysis is time-consuming and raises issues of reproducibility.
 Defining what amount of LAMP-1 association equates to a positively LAMP-1 
 associated bacteria is subjective and may vary from researcher to researcher. 
 The binary nature of the analysis may also result in the loss of important 
-information as small but significant changes in the extent of bacterial 
+information as small but meaningful changes in the extent of bacterial 
 encapsulation by LAMP-1 may not be identifiable by eye. 
 
 The capacity of Staphylococcus aureus to survive for extended periods of time
 within macrophages has become increasingly apparent 
 [4](#4)–[6](#6),[7](#7),[8](#8). Recent work indicates a capacity of S. aureus 
-to survive and even replicate within LAMP-1 positive vesicles 1,2. Escape of 
-S. aureus strains from the phagolysosomes of THP-1 cells and primary human
-macrophages has also been reported (references 1/2 respectively). We prepared
+to survive and even replicate within LAMP-1 positive vesicles [1](#1)–[2](#2). 
+Escape of _S. aureus_ strains from the phagolysosomes of THP-1 cells
+and primary human macrophages has also been reported (references 1/2 respectively). We prepared
 an infection model of the S. aureus MSSA476 strain in the J774A.1 murine 
 macrophage cell line. At early (1.5hr) and late (24hr) timepoints, LAMP-1 
 encapsulation of mCherry tagged S. aureus MSSA476 was captured by 
 immunofluorescence Z-stack confocal microscopy. Example images of positively
 and weakly LAMP-1-associated bacteria are shown in **fig 3a**.
 
-The PD<sub>mean</sub> for each bacterial cluster in 3D space 
+Prior to processing these images in PyDist, the LAMP-1 channel was pre-processed
+by unsharp masking the images in imageJ. Unsharp masking produces a sharpened image 
+by subtracting a blurred copy of the image from the orignial 
+and rescaling the histogram to produce the original contrast in low
+frequncy features. Unsharp masking resulted in a more 
+descrete detection of positive LAMP-1 signal (_fig a_) and a greater capacity
+to resolve differences in co-localization as evidenced by larger
+PD<sub>mean/median/max</sub> values (_fig b_). 
+
+Following pre-processing, the PD<sub>mean</sub> for each bacterial cluster in 3D space 
 at early and late timepoints 
 was calculated in PyDist relative to LAMP-1 fluorescence. **Fig 3b** shows a 
 swarm plot of these measurements. Notably, a larger number of 
 bacterial clusters were detected by PyDist at the 24 hr timepoint then 
-at the 1.5hr timepoint (**number**). An increase in the average PD<sub>mean</sub> 
-is seen for the 24hr timepoint compaired to the 1.5 hr timepoint (**insert mean
-$`\pm`$ error here**). These PD<sub>mean</sub> values are displayed in **fig3b** 
+at the 1.5hr timepoint. A 2.44 fold increase in the mean PD<sub>mean</sub> 
+is seen for the 24hr timepoint compaired to the 1.5 hr timepoint. 
+These PD<sub>mean</sub> values are displayed in **fig3b** 
 as a frequency distribution. Clear differences in the percentage distribution of 
 bacterial PD<sub>mean's</sub> can be observed at the early and late timepoints. 
 The percentage distribution of PD<sub>mean</sub> values at 1.5 hrs has a 
-positive skew with a peak between 0-0.0325 $`\mu m`$. By contrast, at the 24 hr 
+positive skew with a peak between 0-0.0325µm. By contrast, at the 24 hr 
 timepoint, PD<sub>mean</sub> values appear to have a normal distribution, 
-with a peak between 0.125-0.250 $`\mu m`$. Thus, in this infection model, 
+with a peak between 0.125-0.250µm. Thus, in this infection model, 
 PyDist analysis suggests that _S. aureus_ MSSA476 is less likely to be found
 encapsulated by LAMP-1 at late compared to early timepoints. This is
 consistent with previous findings that _S. aureus_ is capable of escape from
@@ -239,12 +254,13 @@ LAMP-1 positive vesicles [5](#5),[10](#10).
 ![**Fig 3 PyDist3D identifys the escape of S. aureus from LAMP-1 positive vesicles**](paper/figures/LAMP-1_Fig_121119.png)
 **Fig 3 PyDist3D identifys the escape of _S. aureus_ from LAMP-1 positive vesicles**
 **(A)** Representative examples of _S. aureus_ with strong and weak LAMP-1 
-associations. A single slice of a Z-stack is shown. An unshark mask pre-filtering
+associations. A single slice of a Z-stack is shown. An unsharp mask pre-filtering
 operation has been applied to the LAMP-1 channel of these images to enable better object detection.
 **(B)** All PD<sub>mean</sub> values for each detected _S. aureus_ object relative
 to LAMP-1 positive signal across early (1.5 hr) and late (24 hr) timepoints
 **(C)** The _S. aureus_ PD<sub>mean</sub> values for early and late timepoints 
 from **(B)** displayed as a frequency distribution.
+
 
 ## Conclusion
 
@@ -253,18 +269,16 @@ that quantifies the relative spatial localization of fluorescent objectsin 2D
 and 3D immunofluorescent microscopy datasets. 
 We have also suggested a set of new measurements to describe the relative 
 spatial colocalization of these fluorescent objects (PD<sub>mean</sub>,
-PD<sub>median</sub> & PD<sub>max</sub>). These metrics appear to have a strong
+PD<sub>median</sub> & PD<sub>max</sub>). These measurements appear to have a strong
 capacity to accurately describe ground-truth colocalization values (**fig**). 
 PD<sub>mean</sub> in particular was highly consistent in its ability to identify 
 known increases in % colocalization. 
 
 The applicability of PyDist analysis to make biological relevant observations 
-was then assessed. Using the PD<sub>mean</sub> metric, we were able to 
+was then assessed. Using the PD<sub>mean</sub> measurement, we were able to 
 identify significant differences in the colocalization of _S. aureus_ with a 
 marker of an intracellular compartment at early and late timepoints. These 
-observations were confirmed by blinded manual analyses. Traditional pixel-
-based measures of colocalization such as Manders and Pearsons coefficients were 
-not capable of identifying these differences. Collectively these 
+observations were confirmed by blinded manual analyses. Collectively these 
 results suggest that PyDist analysis and the perimeter distance (PD) measurements 
 described in this paper can function as a powerful means of analysing the
 relative spatial colocalization of fluorescent biomakers. 
@@ -314,3 +328,20 @@ Monocyte-Derived Macrophages. PLoS One 3, e1409 (2008).
 
 ## Supplemental Figures. 
 
+![**Supp. Fig 1 - PyDist analysis of CBS dataset 2**](paper/figures/Supp_Fig_CBS_Data_Set_2.png)
+**Supp. Fig 1 - PyDist analysis of CBS dataset 2**
+**(A-D)** The average 
+PD<sub>mean/median/max</sub> & edge-edge measurements $`\pm`$ 95% CI for objects
+the red channel of CBS dataset 2.*
+
+![**Supp. Fig 2 - PyDist analysis of CBS dataset 3**](paper/figures/Supp_Fig_CBS_Data_Set_3.png)
+**Supp. Fig 2 - PyDist analysis of CBS dataset 3**
+**(A-D)** The average 
+PD<sub>mean/median/max</sub> & edge-edge measurements $`\pm`$ 95% CI for objects
+the green channel of the CBS dataset 3.*
+
+![**Supp. Fig 3 - Impact of Unsharp Mask Pre-processing**](paper/figures/Supp_Fig_CBS_Unsharp_Mask.png)
+**Supp. Fig 3 - Impact of Unsharp Mask Pre-processing**
+**(A)** The objects identified by PyDist following an unsharp mask processing operation 
+on the LAMP-1 channel only. **(B)** The PD<sub>Mean/Median/Max</sub> and edge-edge measurements
+of the image shown in **(A)** with and without unsharp mask pre-processing
