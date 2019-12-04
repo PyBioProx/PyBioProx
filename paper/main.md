@@ -340,7 +340,7 @@ the red channel of CBS dataset 2.*
 PD<sub>mean/median/max</sub> & edge-edge measurements $`\pm`$ 95% CI for objects
 the green channel of the CBS dataset 3.*
 
-![**Supp. Fig 3 - Impact of Unsharp Mask Pre-processing**](paper/figures/Supp_Fig_CBS_Unsharp_Mask.png)
+![**Supp. Fig 3 - Impact of Unsharp Mask Pre-processing**](paper/figures/Supp_Fig_Unsharp_Mask.png)
 **Supp. Fig 3 - Impact of Unsharp Mask Pre-processing**
 **(A)** The objects identified by PyDist following an unsharp mask processing operation 
 on the LAMP-1 channel only. **(B)** The PD<sub>Mean/Median/Max</sub> and edge-edge measurements
