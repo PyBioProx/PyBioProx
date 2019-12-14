@@ -280,10 +280,13 @@ from **(B)** displayed as a frequency distribution.
 
 In this paper we introduced PyDist: a user friendly open-source image-analysis tool 
 that quantifies the relative spatial localization of fluorescent objectsin 2D 
-and 3D immunofluorescent microscopy datasets. 
-We have also suggested a set of new measurements to describe the relative 
+and 3D immunofluorescent microscopy datasets.
+Despite technically being an _object_-based colocalisation framework, we have shown 
+that PyDist is able to be used on simulated data meant for assessing pixel-based 
+colocalisation measures. 
+We have also suggested a set of measurements to describe the relative 
 spatial colocalization of these fluorescent objects (PD<sub>mean</sub>,
-PD<sub>median</sub> & PD<sub>max</sub>). These measurements appear to have a strong
+PD<sub>median</sub> & PD<sub>max</sub>). These measures appear to have a strong
 capacity to accurately describe ground-truth colocalization values in a 
 2D dataset(_Fig 2_). The applicability of PyDist analysis to make biological relevant observations 
 was then assessed. Using the PD<sub>mean</sub> measurement, we were able to 
@@ -291,7 +294,7 @@ identify significant differences in the colocalization of _S. aureus_ with a
 marker of an intracellular compartment at early and late timepoints (_Fig 3_). 
 Collectively these results suggest that PyDist analysis and the perimeter 
 distance (PD) measurements described in this paper can function as a powerful 
-means of analysing the relative spatial colocalization of fluorescent biomakers. 
+means of analysing the relative spatial colocalization of fluorescent biomarkers. 
 
 ## Results References
 <a name="1">1.</a> Bolte, S. & Cordelières, F. P. A guided tour into subcellular 
