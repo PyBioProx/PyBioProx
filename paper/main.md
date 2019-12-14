@@ -94,44 +94,48 @@ replicate with a step size of 0.75µm. Images are available at the Image Data
 Resource (IDR number: )
 
 
-### 3. Fluorescent object detection
+### 2. Fluorescent object detection
 
 PyDist computes distances between labelled objects in separate fluorescence 
 channels. Prior to detection of fluorescent objects, different pre-processing 
 steps may be performed to improve detection accuracy. PyDist provides a 
-limited number of pre-processing options derived from the `scipy.ndimage` 
-package. Alternatively, pre-processing of images can be performed in another program 
-such as ImageJ and then transfered to PyDist.
-Following pre-processing, binary 2D/3D arrays are generated to define regions 
-containing ‘on’ (1) and ‘off’ (0) pixels representing positive and 
-negative signal. PyDist provides a range of thresholding methods from the 
-scikit-image package to define positive and negative signal [3](#3). The Otsu 
-thresholding method is used in the examples presented in this paper [4](#4)
+small number of pre-processing options derived from the `scipy.ndimage` 
+package. Alteratively, due to it's extensible nature, user selected pre-processing functions 
+can easily be passed in to the detection function using the straight-forward module
+API. 
+A second alternative is to pre-process images with another program and pass in 
+pre-processed images into PyDist.
+Following the optional pre-processing, binary 2D/3D arrays are generated to define regions 
+containing foreground or background pixels, using binary values ‘on’ (1) and ‘off’ (0) 
+to represent presence or absence of signal respectively. 
+PyDist provides a range of thresholding methods from the 
+scikit-image package to define what is selected as positive and negative signal [3](#3). 
+The Otsu thresholding method is used in the examples presented in this paper [4](#4).
 A comparison operator is then used to generate binary 2D/3D images. 
 Alternatively, users can provide PyDist with 
 binary images that have been previously thresholded in another program. 
 Connected regions of ‘on’ pixels are then labelled as unique objects using the 
-`scipy.ndimage.label` function. Size exclusion criteria can then be used to 
-filter the identified objects for a particular size. In this study, objects 
-smaller than 10 connected pixels are considered to be noise and are thus 
+`scipy.ndimage.label` function. Size exclusion criteria can then also be used to 
+filter the identified objects for a particular size range. In the sample data used 
+in this paper, objects smaller than 10 connected pixels are considered to be noise and are thus 
 removed. A binary erosion of the labelled objects is then employed to identify 
 its perimeter pixels. Finally, overlays of the detected object’s perimeter on 
 (user-defined) representative z-slices of the original image are generated to 
 allow for confirmation that fluorescent objects have been appropriately 
 labelled.
 
-### 4. Distance analysis
+### 3. Distance analysis
 
 PyDist allows for the measurement of distances of the perimeter pixels of 
 objects in one channel to the nearest _on_ pixels in another channel. For 
 example, the distances of objects in channel X to objects in channel Y can be 
-measured. Distances analyses are performed using an exact Euclidean distance 
+measured. Distance analyses are performed using an exact Euclidean distance 
 transform of the fluorescent channel that object distances are measured towards 
 (i.e.channel Y). The distance of each perimeter pixel of the fluorescent object 
 in channel X to the nearest _on_ pixel in channel Y is then measured. From 
 this data, summary statistics to describe the distance of each object in 
 channel X relative to objects in channel Y are generated. As described 
-subsequently, PyDist3D introduces a statistic termed the _distance score_ 
+below, PyDist introduces a statistic termed the _distance score_ 
 in which the mean of each perimeter pixel of an object in channel X's 
 distance to the nearest _on_ pixel in channel Y is calculated. Minimum and 
 maximum distances from objects in channel X to the nearest object in channel Y 
