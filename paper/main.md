@@ -147,9 +147,9 @@ are also generated.
 
 The Colocalization Benchmark Source (CBS) is 
 an online database of 2D computer-simulated images with pre-defined 
-(ground truth) values of co-localization ranging from 0-90
-To validate the capacity of this approach to detect changes in colocalization, 
-we utilized Image Set 1 from the CBS. Images 
+(ground truth) values of pixel-based co-localization ranging from 0-90
+To validate the capacity of this approach to detect changes in even pixel-level 
+colocalization, we utilized Image Set 1 from the CBS. Images 
 were processed using PyDist as described in the methods section. Example CBS images
 with ground-truth colocalization values of 10%, 50% and 90% are shown 
 (_Fig 2A_). The PD<sub>mean</sub> for each fluorescent
@@ -179,7 +179,7 @@ do not decrease on average with increasing ground-truth % colocalization (_Fig 2
 demonstrating that edge-edge distance measurements cannot reliably identify 
 changes in ground-truth colocalization. Similar
 results are seen by analysis of CBS datasets 2 & 3 (_Supp Fig 1D, Supp Fig 2D_).
-The poor performance of the edge-edge measurements presumably reflects 
+The poor performance of the edge-edge measurements reflects 
 the fact that only the closest pixel in a magenta object to green fluorescent
 signal is used in edge-edge measurements. As such, a poorly colocalizing object with a 
 PD<sub>mean</sub> distance of 10 pixels could conceivably have an edge-edge 
