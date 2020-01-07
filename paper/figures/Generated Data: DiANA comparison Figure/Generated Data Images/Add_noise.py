@@ -31,10 +31,9 @@ plt.show()
 imgplot = plt.imshow(noisychannel2,cmap = "Greys")
 plt.show()
 """
-#for some reason, saving as a tif using tifffile.imsave
+# for some reason, saving the 'noisyimg' object as a tif using tifffile.imsave
 # resulted in a 64bit image, couldn't figure out why, so decided to 
-# save each channel individually as a tif, shove it into imageJ, merge
-# channels and resave as a tif with a 16bit depth. 
-# save
+# save each channel individually as a tif using plt.imsave,
+# shove it into imageJ, merge channels and resave as a tif with a 16bit depth. 
 plt.imsave('C:/Users/jdeed/OneDrive - University of Exeter/PyDist3D/Generated Data/data/Noisy channel 1 Centroid Test 5 Objects.tif', noisychannel1)
 plt.imsave('C:/Users/jdeed/OneDrive - University of Exeter/PyDist3D/Generated Data/data/Noisy channel 2 Centroid Test 5 Objects.tif', noisychannel2)
