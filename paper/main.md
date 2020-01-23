@@ -35,14 +35,11 @@ BETWEEN TWO OBJECTS?**
 We refer to these pixel-pixel distances as perimeter distance (PD) measurements. 
 The units of PD measurements may be pixels/voxels or in real-world units 
 (e.g. µm/nm) if pixel/voxel dimensions are known. Depending on the number of 
-perimeter pixels, an object may have thousands of PD measuremetns. We show that
-taking the mean, median or maximum of these PD measurements can accuately 
-describe the spatial localization of the object relative to fluorescent
-signal in another channel. We refer to these descriptive measurements as 
+perimeter pixels, each object may have thousands of PD measurements. We show that
+by taking the mean, median or maximum of these PD measurements, we can accuately 
+describe the spatial localization of the object relative to objects in another 
+fluorescent channel. We refer to these descriptive measurements as 
 PD<sub>mean</sub>, PD<sub>median</sub> and PD<sub>max</sub> respectively. 
-
-We show that these measurements can provide 
-powerful insights into the relative spatial distributions of fluorescent biomarkers
 (_Fig 2, Fig 3_).
 
 We also introduce PyDist, a user-friendly object-based colocalization 
