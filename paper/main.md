@@ -5,7 +5,7 @@ Spatial Distributions of Fluorescent Objects.
 
 # Introduction
 
-~~Detecting~~Determining the co-localization of biomarkers via microscopy is a frequently 
+Determining the co-localization of biomarkers via microscopy is a frequently 
 employed method to infer meaningful biological interactions within cells. By
 labelling two or more biomarkers with distinct fluorescent tags, the 
 biomarkers can be visualized by immunofluorescence microscopy methods. 
@@ -14,11 +14,10 @@ Taking single images or multiple images along the Z-axis in the same X/Y axes
 3D space to be observed. Once images are captured, the relationship between 
 the fluorescently-tagged biomarkers can be assessed. A simplistic analysis 
 of colocalization may involve overlaying two fluorescent channels and manually 
-~~identifying~~assessing regions of fluorescent overlap as colocalization. A range of 
+assessing regions of fluorescent overlap as colocalization. A range of 
 more quantitative co-localization analyses exist ranging in complexity
 that can provide more systematic and robust quantification ([1](#1)). 
 
-~~This paper formally defines a set of simple descriptive measurements~~
 In this paper, we define a set of simple descriptive measurements
 that quantify the spatial relationship of each object in fluorescent 
 channel X to objects in fluorescent channel Y. 
@@ -26,19 +25,21 @@ Perimeter Distance (PD) measurements are defined in _Fig 1_
 and detailed extensively in the methods section. In brief, objects in one 
 fluorescent channel are detected and the perimeter pixels around the object 
 determined. The distance of each pixel in an object's perimeter to the nearest
-detected object~~positive fluorescent signal~~ in the second channel is then calculated. 
-The units of this distance may be pixels/voxels or in real-world units 
-(e.g. µm/nm) if pixel/voxel dimensions are known. 
+detected object~~positive fluorescent signal~~ in the second channel is then calculated.
 
-The relative distance of this 
-object in channel 1 to objects in channel 2 can now be described by taking the
-mean, median, maximum or minimum of these PD measurements 
-(to give the PD<sub>mean/median/max</sub> or "edge-edge" measurements respectively.
+**Josh:^ I CHOSE THE PHRASE 'POSITIVE FLUORESCENT SIGNAL' BECAUSE WE GENERATE OUR
+DISTANCE MAP FROM A BINARY MASK OF CHANNEL Y, AS WE HAVEN'T PERFORMED OBJECT
+DETECTION ON CHANNEL Y, IS IT ACCURATE FOR US TO SAY THAT WE ARE MEASURING THE DISTANCE
+BETWEEN TWO OBJECTS?**
 
-**^THIS SENTENCE IS A LITTLE CONFUSING**
-
-We show that these measurements can provide 
-powerful insights into the relative spatial distributions of fluorescent biomarkers
+We refer to these pixel-pixel distances as perimeter distance (PD) measurements. 
+The units of PD measurements may be pixels/voxels or in real-world units 
+(e.g. µm/nm) if pixel/voxel dimensions are known. Depending on the number of 
+perimeter pixels, each object may have thousands of PD measurements. We show that
+by taking the mean, median or maximum of these PD measurements, we can accuately 
+describe the spatial localization of the object relative to objects in another 
+fluorescent channel. We refer to these descriptive measurements as 
+PD<sub>mean</sub>, PD<sub>median</sub> and PD<sub>max</sub> respectively. 
 (_Fig 2, Fig 3_).
 
 We also introduce PyDist, a user-friendly object-based colocalization 
@@ -47,16 +48,16 @@ relationships between biomarkers in 2D or 3D space. Analysis of co-localization
 by distance measurements is not a novel concept. For example, a tool 
 implemented in ImageJ called DiAna allows for the distance-based 
 analysis of pairs of differently labelled fluorescent objects [2](#2). The core 
-advantages that PyDist ~~brings~~introduces include improved speed affording a high aptitude 
+advantages that PyDist introduces include improved speed affording a high aptitude 
 for the batch distance-based colocalization analysis of large 2D and 3D 
 immunofluorescent datasets, as well as the extensibility of being written in an
-easy to learn and very fast to prototype in programming-language, Python, 
+easy to learn and very fast to prototype ~in~ programming-language, Python, 
 compared with e.g. Java or C++. 
-~~much easier to learn language like Python, compared with e.g. Java or C++.~~ 
+
 
 
 ![**Fig 1 PD Measurements Explanation**](paper/figures/PyDist_explanation_figure.png)
-***Fig 1 - PD Measurements** An illustrative~~hypothetical~~ example is 
+***Fig 1 - PD Measurements** An illustrative example is 
 shown in which the distance-based colocalization of a
 blue fluorescent object relative to red fluorescent objects is assessed. 12
 perimeter voxels (illustrated as light-blue boxes) have been identified for the
