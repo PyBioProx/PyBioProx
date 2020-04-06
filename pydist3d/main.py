@@ -6,6 +6,7 @@ J. Metz <metz.jp@gmail.com>
 """
 import os
 import csv
+import warnings
 import numpy as np
 import tifffile
 import matplotlib.pyplot as plt
@@ -51,7 +52,7 @@ def process_file(filepath, output_folder, distance_analyser='edge-to-edge'):
         raise ValueError(
             "Unhandled dimensionality of data"
             + f"\nData must be 3-4 dimensional, got {data.ndim}")
-    elif data.ndim < 3:
+    if data.ndim < 3:
         raise ValueError(
             "Input image must contain 2 channels and therefore"
             " be at least 3d")
@@ -180,7 +181,6 @@ def plot_and_save_outlines(channel1, channel2, mask1, mask2, filepath):
     plt.imshow(channel2[slices], cmap="gray")
     if len(np.unique(mask2[slices])) > 1:
         plt.contour(mask2[slices], levels=[0.5], colors=["r"])
-        import warnings
         warnings.warn(f"Values in mask2[slices]: {np.unique(mask2[slices])}")
         savename = "{}_mask2.png".format(filepath)
     else:
