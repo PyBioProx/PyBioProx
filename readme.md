@@ -1,4 +1,4 @@
-#PyDist3D: 2 & 3d spatial distance analysis in Python
+# PyDist3D: 2 & 3d spatial distance analysis in Python
 
 This module, `pydist3d`, offers efficient 2d and 3d spatial analysis of colocalisation. 
 The analyses fall into the category of object-based colocalisation methods. 
