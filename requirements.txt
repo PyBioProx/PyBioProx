@@ -1,0 +1,11 @@
+imageio==2.6.1
+scipy==1.4.1
+coverage==4.5.4
+scikit_image==0.16.2
+colorama==0.4.3
+pytest==5.3.5
+coloredlogs==14.0
+pandas==1.0.3
+numpy==1.18.2
+tifffile==2020.2.16
+matplotlib==3.2.1
