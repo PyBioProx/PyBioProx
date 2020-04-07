@@ -1,45 +1,32 @@
-# Overall tasklist - Jeremy
+#PyDist3D: 2 & 3d spatial distance analysis in Python
 
-* Overall ease of use
-  * Creating folders as needed
-  * Simple file selection interface
-* Batch processing - kind of already does this (on current folder)
-  * Potentially create collated output - e.g. excel spreadsheet with data from all datasets
-  * Could be done by adding in an analysis submodule that collates exising csv files
-* Collated analysis
-  * Get e.g. all mean distances (from all objects across all datasets in a condition) into a single "column" that can then be easily manipulated
-* Add in extensibility options - e.g. adding different preprocessing etc, outputs. 
+This module, `pydist3d`, offers efficient 2d and 3d spatial analysis of colocalisation. 
+The analyses fall into the category of object-based colocalisation methods. 
 
-# Competition - Josh
+## Installation 
 
-* Diana - imagej plugin 
-  * main advantage is batch interface
-  * gives number of contacts instead of "raw distances"
-  * speed - diana batch macro taking days to run (~100 images), ours takes ~ hour or less for 100 images or less
+To install this Python module, download the module (either as an archive file or 
+using a git client) from https://git.exeter.ac.uk/jm544/three-d-distance-analyser. 
+
+Once downloaded (and extracted if using the archive version), install any necessary 
+requirements using
+
+```
+    pip install -r requirements.txt --user
+```
+
+to install the required modules in your user-space modules directory. 
+Alternatively if using e.g. a virtualenv or you wish to install the 
+dependencies system-wide(!), you can ommit the `--user` flag.
+
+## Getting started
+
+Once installed, the module can be invoked from the command-line using: 
+
+```
+    python -m pydist3d <path_to_folder> 
+```
+
+to run the analysis in batch mode on all data files at the location `path_to_folder`. 
 
 
-## Working title
-
-pydist3d - Automated framework for three-dimensional object-object distance analysis 
-
-???
-
-## Authorship
-
-Josh, Alan, Jeremy
-
-### Paper sections
-
-* Intro 
-  * wrt biological relevance and why we need this - Josh
-  * What's been done before - analysis - Jeremy
-* Methods - Jeremy
-* Rest - To be decided
-
-Alan will be our internal review mechanism
-  
-
-## Data to use for publication - Josh
-
-* Probably not data used by Josh
-* See what Diana have as testing data 
