@@ -8,6 +8,10 @@ The analyses fall into the category of object-based colocalisation methods.
 To install this Python module, download the module (either as an archive file or 
 using a git client) from https://git.exeter.ac.uk/jm544/three-d-distance-analyser. 
 
+The following links points to a zip archive of the latest version: 
+
+https://git.exeter.ac.uk/jm544/three-d-distance-analyser/-/archive/master/three-d-distance-analyser-master.zip
+
 Once downloaded (and extracted if using the archive version), install any necessary 
 requirements using
 
