@@ -144,6 +144,70 @@ are also generated.
 
 # Results Section
 
+### Example 1 - Advantages of PD measurements over centroid-centroid measurements
+
+In an approach described by several groups and implemented in the DiAna ImageJ
+plugin, the distance between pairs of differently labelled fluorescent objects 
+is assessed. 
+This can be done by measuring the distance between the 
+centroids of the objects (centroid-centroid measurements), the edges of the objects
+(edge-edge measurements) or the distance between the centre of one object to the
+edge of another (centroid-edge measurements) ([2](#2)). In Figure 2, we illustrate
+issues with this approach that PD measurements overcome. Within Figure 2A, Image 1
+has a larger number of cyan objects that are spatially closely associated with 
+the red object then Image 2. Image 1 can thus  be reasonably 
+described as having a stronger spatial colocalisation. 
+However, if only analysing the closest centroid-centroid pairing, the images
+are described as having the same levels of spatial colocalisation (Figure 2B). 
+Only when averaging two or more centroid-centroid pairings is Image 1 
+identified as having a greater colocalisation than Image 2. This illustrates that
+while centroid-centroid measurements can detect differences in spatial colocalisation,
+the appropriate number of centroid-centroid measurements to use is not necessarily
+obvious and will likely vary from image to image. Measuring both too few or 
+too many centroid-centroid measurements may result in poor detection of true differences
+in colocalisation, either by excluding colocalised objects from the calculation
+or by diluting the colocalisation signal with irrelevant measurements. By contrast,
+the PD<sub>mean/median/max</sub> measurements all show clear differences between
+Images 1 and 2 with no further analysis decisions needed.
+
+A second issue issue with centroid-centroid measurements that PD measurements 
+overcome involves the overreliance of centroid-centroid measurements on 
+accurate object detection. Object detection for centroid-centroid measurements
+is necessary for both fluorescent channels. PD measurements by contrast, 
+require object detection in only one channel. This reduced dependency on 
+accurately detecting objects limits the impact of small changes in object 
+detection on the average spatial colocalisation of an image. For example, in 
+Figure 2A, Image 3 is a duplicate of Image 2 with a small region of null 
+signal added to divide the closest cyan object (to the red object) such that
+two objects are now detected (as indicated by the white arrowheads). Because
+of this small change in the image, when averaging the two, three and four 
+closest centroid-centroid measurements, Image 3 is described as being 29.6 %,
+29.1 % and 22. 3 % _more_ spatially colocalised then Image 2. By contrast, 
+the PD<sub>median</sub> and PD<sub>max</sub> identified no differences between 
+Image 2 and Image 3. The PD<sub>mean</sub> measurement correctly identifies 
+a very small differnce in spatial colocalisation of Image 2 and 3 (95.810 and 
+95.812 pixels respectively), reflecting the small region of null signal added
+in Image 3. The PD<sub>min</sub> (edge-edge) measurement is unable to 
+differentiate between all three images and thus is inappropriate in this
+instance. 
+
+
+![**Fig 2 PD measurements provide more robust descriptions of spatial distances then centroid-centroid measurements**](paper/figures/Centroid-Centroid-Figure.png)
+**Fig 2 PD measurements provide more robust descriptions of spatial distances then centroid-centroid measurements**
+**(A)**Images generated using Inkscape software with random
+pixel noise added in Python to better resemble true microscopy images. The
+red signal in each image is in the same spatial location each time. As discussed
+in the text, the distribution of the blue signal is altered. Images 2 and 3 are
+identical but for a region of null signal added in image 3 to divide the object
+indicated by white arrow heads into two objects. **(B)** Distance measurements of
+each image. Centroid-centroid distances were calculated in DiAna using default
+parameters ([2](#2)). The ‘Closest’ centroid-centroid measurement describes the
+centroid-centroid distance between the red object and the nearest blue object.
+The “Two Closest” – “Four Closest” centroid-centroid measurements describe
+the average (mean) between the red object and the two – four closest blue
+objects. PD measurements were calculated using PyDist as previously
+described.
+
 ### Example 1 - Capacity of different PD measurements to determine colocalization
 
 The Colocalization Benchmark Source (CBS) is 
