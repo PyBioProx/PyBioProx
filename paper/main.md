@@ -1,7 +1,5 @@
-# Title
+# Perimeter Distance (PD) Measurements and PyDist: Quantitative Image Analysis to Describe the Relative Spatial Proximity of Fluorescent Biomarkers.  
 
-PyDist: Distance-based Image Analysis in Python and Perimeter Distance Measurements to Describe the
-Spatial Distributions of Fluorescent Objects.
 
 # Introduction
 
@@ -18,21 +16,25 @@ assessing regions of fluorescent overlap as colocalization. A range of
 more quantitative co-localization analyses exist ranging in complexity
 that can provide more systematic and robust quantification ([1](#1)). 
 
-In this paper, we define a set of simple descriptive measurements
-that quantify the spatial relationship of each object in fluorescent 
-channel X to objects in fluorescent channel Y. 
+In this paper, we define a set of simple descriptive measurements termed 
+Perimeter Distance (PD) measurements
+that quantify the relative spatial proximity of each object in fluorescent 
+channel X to objects in fluorescent channel Y. We refer to these pixel-pixel 
+distances as perimeter distance (PD) measurements. This approach can be used to 
+measure how the spatial proximity of fluorescently labelled biomarkers changes
+according to experimental conditions. For example, one could use this 
+approach to investigate whether the relative proximity of proteins or 
+organelles (e.g. the 
+proximity of mitochondria to the endoplasmic reticulum) changes when the cell 
+is exposed to a particular treatment. In this paper, we use this approach to 
+quantify how the spatial proximity of intracellular _Staphylococcus aureus_ 
+relative to the lysosomal-associated membrane protein 1 (LAMP-1) changes over time. 
+
 Perimeter Distance (PD) measurements are defined in _Fig 1_ 
 and detailed extensively in the methods section. In brief, objects in one 
 fluorescent channel are detected and the perimeter pixels around the object 
 determined. The distance of each pixel in an object's perimeter to the nearest
 detected object~~positive fluorescent signal~~ in the second channel is then calculated.
-
-**Josh:^ I CHOSE THE PHRASE 'POSITIVE FLUORESCENT SIGNAL' BECAUSE WE GENERATE OUR
-DISTANCE MAP FROM A BINARY MASK OF CHANNEL Y, AS WE HAVEN'T PERFORMED OBJECT
-DETECTION ON CHANNEL Y, IS IT ACCURATE FOR US TO SAY THAT WE ARE MEASURING THE DISTANCE
-BETWEEN TWO OBJECTS?**
-
-We refer to these pixel-pixel distances as perimeter distance (PD) measurements. 
 The units of PD measurements may be pixels/voxels or in real-world units 
 (e.g. µm/nm) if pixel/voxel dimensions are known. Depending on the number of 
 perimeter pixels, each object may have thousands of PD measurements. We show that
@@ -40,11 +42,14 @@ by taking the mean, median or maximum of these PD measurements, we can accuately
 describe the spatial localization of the object relative to objects in another 
 fluorescent channel. We refer to these descriptive measurements as 
 PD<sub>mean</sub>, PD<sub>median</sub> and PD<sub>max</sub> respectively. 
-(_Fig 2, Fig 3_).
 
-We also introduce PyDist, a user-friendly object-based colocalization 
-module written in python that generates PD measurements to describe the 
-relationships between biomarkers in 2D or 3D space. Analysis of co-localization
+We also introduce PyDist, a user-friendly open-source object-based colocalization 
+tool written in Python that generates PD measurements to describe the 
+relationships between biomarkers in 2D or 3D space. For users familiar with 
+Python, PyDist can be used as an extensible Python module. For users unfamiliar
+with Python, PyDist is provided as a GUI which can be run from the desktop. 
+Detailed instructions for use of the GUI are available at __Insert hosting 
+site here__. Analysis of co-localization
 by distance measurements is not a novel concept. For example, a tool 
 implemented in ImageJ called DiAna allows for the distance-based 
 analysis of pairs of differently labelled fluorescent objects [2](#2). The core 
@@ -53,7 +58,6 @@ for the batch distance-based colocalization analysis of large 2D and 3D
 immunofluorescent datasets, as well as the extensibility of being written in an
 easy to learn and very fast to prototype ~in~ programming-language, Python, 
 compared with e.g. Java or C++. 
-
 
 
 ![**Fig 1 PD Measurements Explanation**](paper/figures/PyDist_explanation_figure.png)
@@ -146,35 +150,47 @@ are also generated.
 
 ### Example 1 - Advantages of PD measurements over centroid-centroid measurements
 
-In an approach described by several groups and implemented in the DiAna ImageJ
-plugin, the distance between pairs of differently labelled fluorescent objects 
-is assessed. 
-This can be done by measuring the distance between the 
+To demonstrate some of the advantages of PD measurements in describing 
+the relative spatial proximity of biomarkers (over currently
+utilised alternatives), we generated three artifical images of a red 'biomarker'
+surrounded by cyan 'biomarkers'. Image 1 contains seven cyan objects, four cyan 
+objects that are clustered 
+reasonably closely to the red object and three cyan objects that are located
+further away from the red object. Image 2 has four cyan objects, one of which
+is reasonably close to the red object, and three of which are further away. 
+The red object in Image 1 can thus be reasonably described as having an increased 
+spatial proximity to cyan objects then the red object in Image 2. In an approach described by 
+several groups and implemented in the DiAna ImageJ
+plugin, the difference between these two images is assessed by measuring the 
+distance between red and cyan-object pairings. This can be done by measuring 
+the distance between the 
 centroids of the objects (centroid-centroid measurements), the edges of the objects
 (edge-edge measurements) or the distance between the centre of one object to the
-edge of another (centroid-edge measurements) ([2](#2)). In Figure 2, we illustrate
-issues with this approach that PD measurements overcome. Within Figure 2A, Image 1
-has a larger number of cyan objects that are spatially closely associated with 
-the red object then Image 2. Image 1 can thus  be reasonably 
-described as having a stronger spatial colocalisation. 
-However, if only analysing the closest centroid-centroid pairing, the images
-are described as having the same levels of spatial colocalisation (Figure 2B). 
-Only when averaging two or more centroid-centroid pairings is Image 1 
-identified as having a greater colocalisation than Image 2. This illustrates that
-while centroid-centroid measurements can detect differences in spatial colocalisation,
+edge of another (centroid-edge measurements) ([2](#2)).
+
+By measuring only the closest centroid-centroid pairing of red and cyan objects, 
+the red object in Images 1 and 2 are described as having the 
+same levels of relative spatial colocalisation to the cyan objects (Figure 2B). 
+Only when averaging two or more centroid-centroid pairings, is the red object in
+Image 1 described as having an increased spatial proximity to cytan objects 
+then the red object in Image 2. This illustrates that
+while centroid-centroid measurements can detect differences in the relative 
+spatial proximity of biomarkers,
 the appropriate number of centroid-centroid measurements to use is not necessarily
 obvious and will likely vary from image to image. Measuring both too few or 
 too many centroid-centroid measurements may result in poor detection of true differences
-in colocalisation, either by excluding colocalised objects from the calculation
+in the relative spatial proximity of biomarkers, 
+either by excluding relevant measurements from the calculation
 or by diluting the colocalisation signal with irrelevant measurements. By contrast,
 the PD<sub>mean/median/max</sub> measurements all show clear differences between
 Images 1 and 2 with no further analysis decisions needed.
 
-A second issue issue with centroid-centroid measurements that PD measurements 
+A second issue with centroid-centroid measurements that PD measurements 
 overcome involves the overreliance of centroid-centroid measurements on 
 accurate object detection. Object detection for centroid-centroid measurements
 is necessary for both fluorescent channels. PD measurements by contrast, 
-require object detection in only one channel. This reduced dependency on 
+require object detection in only one channel (in this case, the channel containing
+the red object). This reduced dependency on 
 accurately detecting objects limits the impact of small changes in object 
 detection on the average spatial colocalisation of an image. For example, in 
 Figure 2A, Image 3 is a duplicate of Image 2 with a small region of null 
