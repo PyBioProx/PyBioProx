@@ -150,63 +150,68 @@ are also generated.
 
 ### Example 1 - Advantages of PD measurements over centroid-centroid measurements
 
-To demonstrate some of the advantages of PD measurements in describing 
-the relative spatial proximity of biomarkers (over currently
-utilised alternatives), we generated three artifical images of a red 'biomarker'
-surrounded by cyan 'biomarkers'. Image 1 contains seven cyan objects, four cyan 
-objects that are clustered 
-reasonably closely to the red object and three cyan objects that are located
-further away from the red object. Image 2 has four cyan objects, one of which
+To demonstrate some of the advantages of PD measurements in describing the 
+relative spatial proximity of biomarkers (over currently
+utilised alternatives), we generated three artificial images of a red 
+'biomarker' surrounded by cyan 'biomarkers' (Fig X). "Image 1" contains seven 
+cyan objects, four cyan objects that are clustered reasonably tightly to the 
+red object and three cyan objects located further away from the red object. 
+'Image 2' has four cyan objects, one of which
 is reasonably close to the red object, and three of which are further away. 
-The red object in Image 1 can thus be reasonably described as having an increased 
-spatial proximity to cyan objects then the red object in Image 2. In an approach described by 
-several groups and implemented in the DiAna ImageJ
-plugin, the difference between these two images is assessed by measuring the 
-distance between red and cyan-object pairings. This can be done by measuring 
-the distance between the 
-centroids of the objects (centroid-centroid measurements), the edges of the objects
-(edge-edge measurements) or the distance between the centre of one object to the
-edge of another (centroid-edge measurements) ([2](#2)).
+The red object in 'Image 1', therefore, has an increased 
+spatial proximity to cyan objects then the red object in 'Image 2'.
 
-By measuring only the closest centroid-centroid pairing of red and cyan objects, 
-the red object in Images 1 and 2 are described as having the 
-same levels of relative spatial colocalisation to the cyan objects (Figure 2B). 
-Only when averaging two or more centroid-centroid pairings, is the red object in
-Image 1 described as having an increased spatial proximity to cytan objects 
-then the red object in Image 2. This illustrates that
-while centroid-centroid measurements can detect differences in the relative 
-spatial proximity of biomarkers,
-the appropriate number of centroid-centroid measurements to use is not necessarily
-obvious and will likely vary from image to image. Measuring both too few or 
-too many centroid-centroid measurements may result in poor detection of true differences
-in the relative spatial proximity of biomarkers, 
-either by excluding relevant measurements from the calculation
-or by diluting the colocalisation signal with irrelevant measurements. By contrast,
-the PD<sub>mean/median/max</sub> measurements all show clear differences between
-Images 1 and 2 with no further analysis decisions needed.
+Previously published methods to quantify the difference between these images 
+involve measuring the distance between pairs of (red and cyan) objects. 
+The 'DiAna' ImageJ plug-in, implements a version of this approach. 
+Several different types of measurement between each object pairing 
+are available including centroid-centroid measurements, edge-edge 
+measurements or measuring the distance between the centre of one object 
+to the edge of the other (centroid-edge measurements) ([2](#2)). 
+In 'Image 1' and 'Image 2', seven and four different pairings (respectively) 
+of the red object to cyan objects are possible. To define which of these 
+pairings to collect measurements from, DiAna ranks them by distance. 
+The user then defines the number of measurements to collect. In 'Image 1', 
+the options range from collecting the closest (red-cyan) measurement to 
+collecting the seven closest red-cyan measurements. 
+The number of measurements to take is not necessarily obvious and 
+profoundly influences the outcome of the analysis. For example, 
+by measuring only the closest centroid-centroid pairing, the red object 
+in 'Images 1 and 2' are described as having the same levels of relative 
+spatial colocalisation to the cyan objects (Figure 2B). Only when averaging
+two or more centroid-centroid pairings, is the red object in 'Image 1'
+described as having increased spatial proximity to cyan objects then 
+the red object in 'Image 2'. The appropriate number of measurements to take
+will likely vary from image to image. Taking both too few or too many paired
+measurements may result in poor detection of real differences in the relative
+spatial proximity of biomarkers. Either, by excluding relevant measurements from
+the calculation or, by diluting the signal with irrelevant measurements.
+By contrast, the PD<sub>mean/median/max</sub> measurements all show apparent
+differences between 'Images 1 and 2' with no further analysis decisions needed.
 
-A second issue with centroid-centroid measurements that PD measurements 
-overcome involves the overreliance of centroid-centroid measurements on 
-accurate object detection. Object detection for centroid-centroid measurements
-is necessary for both fluorescent channels. PD measurements by contrast, 
-require object detection in only one channel (in this case, the channel containing
-the red object). This reduced dependency on 
-accurately detecting objects limits the impact of small changes in object 
-detection on the average spatial colocalisation of an image. For example, in 
-Figure 2A, Image 3 is a duplicate of Image 2 with a small region of null 
-signal added to divide the closest cyan object (to the red object) such that
-two objects are now detected (as indicated by the white arrowheads). Because
-of this small change in the image, when averaging the two, three and four 
-closest centroid-centroid measurements, Image 3 is described as being 29.6 %,
-29.1 % and 22. 3 % _more_ spatially colocalised then Image 2. By contrast, 
-the PD<sub>median</sub> and PD<sub>max</sub> identified no differences between 
-Image 2 and Image 3. The PD<sub>mean</sub> measurement correctly identifies 
-a very small differnce in spatial colocalisation of Image 2 and 3 (95.810 and 
+A second issue with centroid-centroid measurements that PD measurements overcome 
+involves the overreliance of centroid-centroid measurements on accurate object
+detection. Object detection for centroid-centroid measurements is necessary for
+both fluorescent channels. PD measurements, by contrast, require object 
+detection in only one channel (in this case, the channel containing
+the red object). This reduced dependency on accurately detecting objects 
+limits the impact of small changes in object detection on the average spatial 
+colocalisation of an image. For example, in Figure 2A, 'Image 3' is a duplicate
+of 'Image 2' with a small region of null signal added to divide the closest cyan
+object (to the red object) such that two objects are now detected (as indicated
+by the white arrowheads). Because of this small change in the image, when
+averaging the two, three and four closest centroid-centroid measurements,
+Image 3 is described as being 29.6 %, 29.1 % and 22.3 % _more_ spatially
+colocalised then 'Image 2'. Indeed if averaging only two centroid-centroid
+measurements, 'Image 3' appears slightly _more_ spatially colocalised than
+'Image 1'. By contrast, the PD<sub>median</sub> and PD<sub>max</sub> 
+identified no differences between 'Image 2' and 'Image 3'. 
+The PD<sub>mean</sub> measurement correctly identifies 
+a tiny increase in the spatial proximity of Image 2 and 3 (95.810 and 
 95.812 pixels respectively), reflecting the small region of null signal added
 in Image 3. The PD<sub>min</sub> (edge-edge) measurement is unable to 
 differentiate between all three images and thus is inappropriate in this
 instance. 
-
 
 ![**Fig 2 PD measurements provide more robust descriptions of spatial distances then centroid-centroid measurements**](paper/figures/Centroid-Centroid-Figure.png)
 **Fig 2 PD measurements provide more robust descriptions of spatial distances then centroid-centroid measurements**
