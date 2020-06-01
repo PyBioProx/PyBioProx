@@ -229,7 +229,7 @@ the average (mean) between the red object and the two – four closest blue
 objects. PD measurements were calculated using PyDist as previously
 described.
 
-### Example 1 - Capacity of different PD measurements to determine colocalization
+### Example 2 - Capacity of different PD measurements to determine colocalization
 
 The Colocalization Benchmark Source (CBS) is 
 an online database of 2D computer-simulated images with pre-defined 
@@ -284,7 +284,7 @@ P-values were assessed using students t-test \*\*\*\*  = P<0.001. **(C-F)** The 
 PD<sub>mean/median/max</sub> & edge-edge measurements $`\pm`$ 95% CI for objects
 the magenta channel of the CBS dataset 1.*
 
-### Example 2 - Fluorescent 3D confocal microscopy & PyDist reveals escape of S. aureus from LAMP-1 positive vesicles at a 24h timepoint
+### Example 3 - Fluorescent 3D confocal microscopy & PyDist reveals escape of S. aureus from LAMP-1 positive vesicles at a 24h timepoint
 
 The internalization of bacteria by innate immune cells such as macrophages is 
 an important mechanism to contain microbial threats. 
