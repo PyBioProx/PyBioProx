@@ -33,7 +33,10 @@ def get_files(folder):
     return filename_list
 
 
-def process_file(filepath, output_folder, distance_analyser='edge-to-edge'):
+def process_file(
+        filepath,
+        output_folder,
+        distance_analyser='edge-to-edge'):
     """
     Perform main processing on the file
     """
