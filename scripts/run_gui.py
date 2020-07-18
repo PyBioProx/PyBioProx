@@ -22,14 +22,19 @@ except ModuleNotFoundError:
 
 
 class PyDist3dSettingsWidget(QtWidgets.QWidget):
+    """
+    Class representing a dialog for inputting more advanced settings than just
+    requesting the input folder name
+    """
+    # pylint: disable=c-extension-no-member
+    # PyQt is full of these, so disabling globally for the class makes sense
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.threshold_options = ["None", "Otsu"]
-        self.channel_1_options = ["0", "1", "2"]
-        self.channel_2_options = ["0", "1", "2"]
-        self.input_folder = None
-        self.output_folder = None
+        threshold_options = ["None", "Otsu", "Li"]
+        filter_options = ["None", "Gaussian (sigma 3px)"]
+        channel_1_options = ["0", "1", "2"]
+        channel_2_options = ["0", "1", "2"]
 
         # self.resize(600, 480)
         self.setWindowTitle("PyDist3D Settings")
@@ -46,25 +51,29 @@ class PyDist3dSettingsWidget(QtWidgets.QWidget):
         select_output_button = QtWidgets.QPushButton("Select", self)
         select_output_button.clicked.connect(self.select_output)
 
+        select_filter_label = QtWidgets.QLabel("Filtering", self)
+        self.select_filter_select = QtWidgets.QComboBox(self)
+        self.select_filter_select.addItems(filter_options)
+
         select_threshold_label = QtWidgets.QLabel("Thresholding", self)
         self.select_threshold_select = QtWidgets.QComboBox(self)
-        self.select_threshold_select.addItems(self.threshold_options)
+        self.select_threshold_select.addItems(threshold_options)
 
         select_channel_1_label = QtWidgets.QLabel("Channel 1", self)
         self.select_channel_1 = QtWidgets.QComboBox(self)
-        self.select_channel_1.addItems(self.channel_1_options)
+        self.select_channel_1.addItems(channel_1_options)
 
         select_channel_2_label = QtWidgets.QLabel("Channel 2", self)
         self.select_channel_2 = QtWidgets.QComboBox(self)
-        self.select_channel_2.addItems(self.channel_2_options)
+        self.select_channel_2.addItems(channel_2_options)
+        self.select_channel_2.setCurrentIndex(1)
 
         cancel_button = QtWidgets.QPushButton("Cancel", self)
         self.run_button = QtWidgets.QPushButton("Run", self)
         self.run_button.setEnabled(False)
         cancel_button.clicked.connect(
             lambda: QtWidgets.QApplication.instance().exit(-1))
-        self.run_button.clicked.connect(
-            QtWidgets.QApplication.instance().quit)
+        self.run_button.clicked.connect(self.do_run)
 
         layout = QtWidgets.QGridLayout()
         layout.addWidget(select_input_label, 0, 0)
@@ -81,8 +90,11 @@ class PyDist3dSettingsWidget(QtWidgets.QWidget):
         layout.addWidget(select_channel_2_label, 2, 2)
         layout.addWidget(self.select_channel_2, 2, 3)
 
-        layout.addWidget(select_threshold_label, 3, 1)
-        layout.addWidget(self.select_threshold_select, 3, 2, 1, 2)
+        layout.addWidget(select_filter_label, 3, 1)
+        layout.addWidget(self.select_filter_select, 3, 2, 1, 2)
+
+        layout.addWidget(select_threshold_label, 4, 1)
+        layout.addWidget(self.select_threshold_select, 4, 2, 1, 2)
 
         layout.addWidget(cancel_button, 5, 3)
         layout.addWidget(self.run_button, 5, 4)
@@ -90,36 +102,91 @@ class PyDist3dSettingsWidget(QtWidgets.QWidget):
         self.show()
 
     def select_input(self):
-        self.input_folder = QtWidgets.QFileDialog.getExistingDirectory(
+        """
+        Select the input folder using a standard Qt Dialog.
+        Also then conditionally sets the run button as enabled
+        """
+        input_folder = QtWidgets.QFileDialog.getExistingDirectory(
             parent=self,
             caption="Select input data folder",
         )
-        self.select_input_text.setText(self.input_folder)
+        output_folder = self.select_output_text.text()
+        self.select_input_text.setText(input_folder)
         self.run_button.setEnabled(
-            bool(self.input_folder and self.output_folder))
-
+            bool(input_folder and output_folder))
 
     def select_output(self):
-        self.output_folder = QtWidgets.QFileDialog.getExistingDirectory(
+        """
+        Select the output folder using a standard Qt Dialog.
+        Also then conditionally sets the run button as enabled
+        """
+        input_folder = self.select_input_text.text()
+        output_folder = QtWidgets.QFileDialog.getExistingDirectory(
             parent=self,
             caption="Select output folder",
         )
-        self.select_output_text.setText(self.output_folder)
-        self.run_button.setEnabled(
-            bool(self.input_folder and self.output_folder))
+        self.select_output_text.setText(output_folder)
+        self.run_button.setEnabled(bool(input_folder and output_folder))
 
     def get_settings(self):
+        """
+        Return the settings as a dictionary
+        """
         return {
-            "input_folder": self.input_folder,
-            "output_folder": self.output_folder,
-            "channel 1": self.select_channel_1.currentText(),
-            "channel 2": self.select_channel_2.currentText(),
+            "input_folder": self.select_input_text.text(),
+            "output_folder": self.select_output_text.text(),
+            "channel_1": int(self.select_channel_1.currentText()),
+            "channel_2": int(self.select_channel_2.currentText()),
+            "filter_method": self.select_filter_select.currentText(),
             "threshold_method": self.select_threshold_select.currentText(),
         }
+
+    def do_run(self):
+        """
+        Perform validation - if all good, quit the application with
+        the correct code for continuing with running
+        """
+        problem = self.is_problem_with_options()
+        if problem:
+            self.show_problem(*problem)
+        else:
+            QtWidgets.QApplication.instance().quit()
+
+    def show_problem(self, problem_title, problem):
+        message = QtWidgets.QMessageBox()
+        message.setIcon(QtWidgets.QMessageBox.Warning)
+        message.setText(problem_title)
+        message.setInformativeText(problem)
+        message.exec_()
+
+    def is_problem_with_options(self):
+        """
+        Return message explaining problem with options if there is one
+        or False if not
+        """
+        settings = self.get_settings()
+        if not os.path.isdir(settings["input_folder"]):
+            return (
+                "Input folder problem",
+                f"Input folder [{settings['input_folder']}]"
+                " must be an existing folder")
+        if not os.path.isdir(settings["output_folder"]):
+            return (
+                "Output folder problem",
+                f"Output folder [{settings['output_folder']}]"
+                " must be an existing folder")
+        if settings["channel_1"] == settings["channel_2"]:
+            return (
+                "Channel selection problem",
+                f"channel 1 [{settings['channel_1']}]"
+                f" must be diffent from channel 2 [{settings['channel_2']}]")
+        return False
 
 
 def get_settings():
     """
+    Create and run the Settings dialog, returning the
+    settings entered by the user
     """
     # pylint: disable=c-extension-no-member
     app = QtWidgets.QApplication([])
@@ -140,7 +207,11 @@ def main():
     print("Settings:", settings)
     pydist3d_main.main(
         settings["input_folder"],
-        output_folder=settings["output_folder"]
+        output_folder=settings["output_folder"],
+        channel1_index=settings["channel_1"],
+        channel2_index=settings["channel_2"],
+        filter_method=settings["filter_method"],
+        threshold_method=settings["threshold_method"],
     )
 
 
