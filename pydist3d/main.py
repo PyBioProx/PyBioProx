@@ -11,15 +11,20 @@ import numpy as np
 import tifffile
 import matplotlib.pyplot as plt
 import skimage.filters as skfilt
+import scipy.ndimage as ndi
 from pydist3d import distance_analysis
 from pydist3d.utility import logger
-
+plt.switch_backend('agg')
 
 # ------------------------------
 # Add in calibration of pixels in xy and z directions
 # ------------------------------
 __zmicsperpix__ = 0.75
 __xymicsperpix__ = 0.08
+__threshold_functions__ = {
+    'li': skfilt.threshold_li,
+    'otsu': skfilt.threshold_otsu,
+}
 
 
 def get_files(folder):
@@ -33,9 +38,42 @@ def get_files(folder):
     return filename_list
 
 
+def perform_filter_using_method(image, method):
+    if method is None:
+        return image
+    method = method.lower()
+    if method == "gaussian (sigma 3px)":
+        return ndi.gaussian_filter(image, sigma=3.0)
+    else:
+        raise ValueError(f"Filter method [{method}] not supported")
+
+
+def perform_thresholding(filtered1, filtered2, threshold_method):
+    """
+    Perform requested thresholding (or none) and return result
+    """
+    if threshold_method is not None:
+        threshold_method = threshold_method.lower()
+    if threshold_method not in (None, 'none'):
+        threshold_function = __threshold_functions__[threshold_method]
+        threshold_value1 = threshold_function(filtered1)
+        threshold_value2 = threshold_function(filtered2)
+        # apply threshold using comparison operator to generate binary stacks
+        mask1 = filtered1 >= threshold_value1
+        mask2 = filtered2 >= threshold_value2
+    else:
+        mask1 = filtered1
+        mask2 = filtered2
+    return mask1, mask2
+
+
 def process_file(
         filepath,
         output_folder,
+        channel1_index=0,
+        channel2_index=1,
+        filter_method=None,
+        threshold_method=None,
         distance_analyser='edge-to-edge'):
     """
     Perform main processing on the file
@@ -61,8 +99,8 @@ def process_file(
             " be at least 3d")
 
     # split channels
-    channel1 = data[0]
-    channel2 = data[1]
+    channel1 = data[channel1_index]
+    channel2 = data[channel2_index]
 
     if channel1.ndim == 3:
         channel1 = shuffle_smallest_dim_to_front(channel1)
@@ -72,14 +110,10 @@ def process_file(
     logger.debug("Channel 2 data has shape: %s", channel2.shape)
     # at this point extra filtering steps can be inserted; I
     # have pre-filtered tis data in image-j so no need for extra filtering
-    filtered1 = channel1
-    filtered2 = channel2
-    # identify thresholding values using threshold_otsu
-    threshold_value1 = skfilt.threshold_otsu(filtered1)
-    threshold_value2 = skfilt.threshold_otsu(filtered2)
-    # apply threshold using comparison operator to generate 3D binary stacks
-    mask1 = filtered1 >= threshold_value1
-    mask2 = filtered2 >= threshold_value2
+    filtered1 = perform_filter_using_method(channel1, filter_method)
+    filtered2 = perform_filter_using_method(channel2, filter_method)
+    # identify thresholding values using method selected
+    mask1, mask2 = perform_thresholding(filtered1, filtered2, threshold_method)
 
     # We now create overlay figures for channel 1 and 2
     # and save to the input folder to allow
@@ -193,7 +227,14 @@ def plot_and_save_outlines(channel1, channel2, mask1, mask2, filepath):
     logger.info("Created overlay images")
 
 
-def batch(input_folder, output_folder):
+def batch(
+        input_folder,
+        output_folder=None,
+        channel1_index=0,
+        channel2_index=1,
+        filter_method=None,
+        threshold_method=None,
+        ):
     """
     Batch process all the data files in a given folder,
     saving results to the nominated `output_folder`.
@@ -205,16 +246,37 @@ def batch(input_folder, output_folder):
         logger.info(
             "processing file %s, this is file %d of %d",
             filename, index + 1, len(filename_list))
-        process_file(filepath, output_folder)
+        process_file(
+            filepath,
+            output_folder=output_folder,
+            channel1_index=channel1_index,
+            channel2_index=channel2_index,
+            filter_method=filter_method,
+            threshold_method=threshold_method,
+        )
 
 
-def main(input_folder, output_folder=None):
+def main(
+        input_folder,
+        output_folder=None,
+        channel1_index=0,
+        channel2_index=1,
+        filter_method=None,
+        threshold_method=None,
+        ):
     """
     Main entry point to run the pydist3d analysis pipeline
     """
     if output_folder is None:
         output_folder = os.path.join(input_folder, "tables")
-    batch(input_folder, output_folder)
+    batch(
+        input_folder=input_folder,
+        output_folder=output_folder,
+        channel1_index=channel1_index,
+        channel2_index=channel2_index,
+        filter_method=filter_method,
+        threshold_method=threshold_method,
+    )
 
 
 def main_cli():
