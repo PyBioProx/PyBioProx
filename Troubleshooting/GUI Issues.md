@@ -70,7 +70,7 @@ we are using in the upcoming paper.
 'max Distance' -> 'Hausdorff Distance'
 'mean Distance' -> 'PD<sub>mean</sub>'
 
-A median ('median distance' -> 'PD<sub>median</sub>') and sum ('sum distance' -> PD<sub>sum</sum>))
+A median ('median distance' -> 'PD<sub>median</sub>') and sum ('sum distance' -> PD<sub>sum</sub>)
 of the PD measurements is 
 also currently included, I personally do not see much value in these measurements:
 
