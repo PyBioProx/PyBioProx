@@ -66,7 +66,7 @@ This is another minor point that applies to both the GUI and the python module,
 in the stats_table output, the names should be changed to match the descriptiosn
 we are using in the upcoming paper. 
 
-'min Distance' -> 'Edge to Edge'
+'min Distance' -> 'PD<sub>min</sub>'
 'max Distance' -> 'Hausdorff Distance'
 'mean Distance' -> 'PD<sub>mean</sub>'
 
@@ -85,4 +85,19 @@ size of the object being measured.
 Finally, the 'total number of bacterial perimeter pixels' measurement should
 be renamed to 'Number of Perimeter Pixels in Object' to make it more widely applicable
 to all users. 
+
+**6. Set min and max size for connected pixels**
+
+I would like the user to have the capacity to remove objects which have a number 
+of connected pixels above or below a particular number. I removed small 
+objects in my analyses using the morphology.remove_small_objects() function. 
+
+
+**7. Too many objects error**
+When I first started using this approach the main points at which this would
+break would be when object detection picked out too many objects E.g. if thresholding 
+was working poorly, or if there isn't any 'real' signal in that image. Sometimes
+you would get tens of thousands of objects detected. This would cause
+the program to appear to have frozen. We should guard against this 
+in the GUI by allowing the user to select the maximum number of objects expected. 
 
