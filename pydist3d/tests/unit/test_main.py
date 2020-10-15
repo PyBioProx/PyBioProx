@@ -8,6 +8,7 @@ import os
 import pytest
 import numpy as np
 from pydist3d import main
+from unittest.mock import Mock
 
 
 class TestMain:
@@ -20,34 +21,34 @@ class TestMain:
             main.main(input_folder="i don't exist")
 
     def test_existing_folder_no_files(self, monkeypatch):
-        called_batch = 0
         input_folder_junk = "doesn't matter"
         output_folder_junk = os.path.join(input_folder_junk, "tables")
 
-        def mock_batch(input_folder, output_folder):
-            nonlocal called_batch
-            called_batch += 1
-            assert input_folder == input_folder_junk
-            assert output_folder == output_folder_junk
-
+        mock_batch = Mock(main.batch)
         monkeypatch.setattr(main, "batch", mock_batch)
-        main.main(input_folder=input_folder_junk)
-        assert called_batch == 1
+
+        kwargs = dict(
+            input_folder=input_folder_junk,
+            output_folder=output_folder_junk)
+        main.main(**kwargs)
+
+        mock_batch.assert_called_once()
+        assert mock_batch.call_count == 1
+        assert set(mock_batch.call_args.kwargs).issuperset(kwargs)
 
     def test_existing_folder_no_data_files(self, monkeypatch):
-        called_batch = 0
         input_folder_junk = "doesn't matter"
         output_folder_junk = os.path.join(input_folder_junk, "tables")
 
-        def mock_batch(input_folder, output_folder):
-            nonlocal called_batch
-            called_batch += 1
-            assert input_folder == input_folder_junk
-            assert output_folder == output_folder_junk
+        mock_batch = Mock(main.batch)
 
         monkeypatch.setattr(main, "batch", mock_batch)
-        main.main(input_folder=input_folder_junk)
-        assert called_batch == 1
+        kwargs = dict(
+            input_folder=input_folder_junk,
+            output_folder=output_folder_junk)
+        main.main(**kwargs)
+        mock_batch.assert_called_once()
+        assert set(mock_batch.call_args.kwargs).issuperset(kwargs)
 
 
 class TestBatch:
