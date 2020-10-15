@@ -135,7 +135,9 @@ def process_file(
     # label.
     distances_list, dist_stats_list = distance_analyser(
         mask1, mask2,
-        xymicsperpix=__xymicsperpix__, zmicsperpix=__zmicsperpix__)
+        scale={
+            'xymicsperpix': __xymicsperpix__,
+            'zmicsperpix': __zmicsperpix__})
 
     output_distances_and_stats(
         os.path.basename(filepath), output_folder,

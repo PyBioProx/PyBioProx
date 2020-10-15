@@ -4,9 +4,19 @@ Distance analysis functions
 
 J. Metz <metz.jp@gmail.com>
 """
+from dataclasses import dataclass
 import numpy as np
 import scipy.ndimage as ndi
 from pydist3d.utility import logger
+
+
+@dataclass(frozen=True)
+class Scale:
+    """
+    Simple calibration scale dataclass
+    """
+    xymicsperpix: float
+    zmicsperpix: float
 
 
 def get_analyser(name):
@@ -17,17 +27,20 @@ def get_analyser(name):
     """
     # Can't use hyphens or spaces
     name_sanitized = name.replace('-', '_').replace(' ', '_')
-    candidates = globals()
-    # TODO: Remove non-functions from this
+    candidates = {
+        key: value
+        for key, value in globals().items()
+        if callable(value)}
     if name_sanitized not in candidates:
         raise ValueError(f'{name} is not a valid distance analysis function')
     return candidates[name_sanitized]
 
 
-def edge_to_edge(mask1, mask2, xymicsperpix=1, zmicsperpix=1):
+def edge_to_edge(mask1, mask2, scale=None):
     """
     Analyses edge-to-edge distances TODO: COMPLETE ME
     """
+    scale = Scale(**dict({'xymicsperpix': 1, 'zmicsperpix': 1}, **scale or {}))
     # Generate distance map of mask2 - Note: because the distance
     # map here measures how far to the nearest OFF pixel (0), we need to
     # invert the mask while performing this function
@@ -37,9 +50,9 @@ def edge_to_edge(mask1, mask2, xymicsperpix=1, zmicsperpix=1):
     # distance transforms!
     # NOTE: Includes pixel sampling factors;
     # so distances will be in microns
-    sampling = [xymicsperpix for shape in mask1.shape]
+    sampling = [scale.xymicsperpix for shape in mask1.shape]
     if len(sampling) == 3:
-        sampling[0] = zmicsperpix
+        sampling[0] = scale.zmicsperpix
     distancemap2 = ndi.distance_transform_edt(~mask2, sampling=sampling)
 
     labels1, num_objects1 = ndi.label(mask1)
@@ -71,12 +84,12 @@ def edge_to_edge(mask1, mask2, xymicsperpix=1, zmicsperpix=1):
     distances_list = []
     dist_stats_list = [
         [
-            "min distance",
-            "max distance",
-            "mean distance",
-            "median distance",
-            "sum distance",
-            "total number of bacterial perimiter pixels",
+            "PDmin",
+            "Hausdorff Distance",
+            "PDmean",
+            # "median distance",
+            # "sum distance",
+            "Number of Perimeter Pixels",
         ]
     ]
 
@@ -103,9 +116,9 @@ def edge_to_edge(mask1, mask2, xymicsperpix=1, zmicsperpix=1):
             np.min(dist_arr),
             np.max(dist_arr),
             np.mean(dist_arr),
-            np.median(dist_arr),
-            np.sum(dist_arr),
-            dist_arr.shape[0],
+            # np.median(dist_arr),
+            # np.sum(dist_arr),
+            np.shape(dist_arr)[0],
         ]
         # This uses "logical indexing", i.e. we can pass in a mask array
         # to extract only pixels in distancemap2 where the mask array
