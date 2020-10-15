@@ -30,50 +30,67 @@ class PyDist3dSettingsWidget(QtWidgets.QWidget):
     # PyQt is full of these, so disabling globally for the class makes sense
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # self.resize(600, 480)
+        self.select_input_text = None
+        self.select_output_text = None
+        self.select_filter_select = None
+        self.select_threshold_select = None
+        self.select_channel_1 = None
+        self.select_channel_2 = None
+        self.run_button = None
+        self.generate_controls()
+        self.generate_layout()
+        self.setWindowTitle("PyDist3D Settings")
+        self.show()
 
+    def generate_controls(self):
+        """
+        Adds controls
+        """
         threshold_options = ["None", "Otsu", "Li"]
         filter_options = ["None", "Gaussian (sigma 3px)"]
         channel_1_options = ["1", "2", "3"]
         channel_2_options = ["1", "2", "3"]
-
-        # self.resize(600, 480)
-        self.setWindowTitle("PyDist3D Settings")
-
-        select_input_label = QtWidgets.QLabel("Input folder", self)
         self.select_input_text = QtWidgets.QLineEdit(self)
         self.select_input_text.setReadOnly(True)
+        self.select_output_text = QtWidgets.QLineEdit(self)
+        self.select_output_text.setReadOnly(True)
+        self.select_filter_select = QtWidgets.QComboBox(self)
+        self.select_filter_select.addItems(filter_options)
+        self.select_threshold_select = QtWidgets.QComboBox(self)
+        self.select_threshold_select.addItems(threshold_options)
+        self.select_channel_1 = QtWidgets.QComboBox(self)
+        self.select_channel_1.addItems(channel_1_options)
+        self.select_channel_2 = QtWidgets.QComboBox(self)
+        self.select_channel_2.addItems(channel_2_options)
+        self.select_channel_2.setCurrentIndex(1)
+        self.run_button = QtWidgets.QPushButton("Run", self)
+        self.run_button.setEnabled(False)
+        self.run_button.clicked.connect(self.do_run)
+
+    def generate_layout(self):
+        """
+        Generates the layout
+        """
+        select_input_label = QtWidgets.QLabel("Input folder", self)
         select_input_button = QtWidgets.QPushButton("Select", self)
         select_input_button.clicked.connect(self.select_input)
 
         select_output_label = QtWidgets.QLabel("Output folder", self)
-        self.select_output_text = QtWidgets.QLineEdit(self)
-        self.select_output_text.setReadOnly(True)
         select_output_button = QtWidgets.QPushButton("Select", self)
         select_output_button.clicked.connect(self.select_output)
 
         select_filter_label = QtWidgets.QLabel("Filtering", self)
-        self.select_filter_select = QtWidgets.QComboBox(self)
-        self.select_filter_select.addItems(filter_options)
 
         select_threshold_label = QtWidgets.QLabel("Thresholding", self)
-        self.select_threshold_select = QtWidgets.QComboBox(self)
-        self.select_threshold_select.addItems(threshold_options)
 
         select_channel_1_label = QtWidgets.QLabel("Channel 1", self)
-        self.select_channel_1 = QtWidgets.QComboBox(self)
-        self.select_channel_1.addItems(channel_1_options)
 
         select_channel_2_label = QtWidgets.QLabel("Channel 2", self)
-        self.select_channel_2 = QtWidgets.QComboBox(self)
-        self.select_channel_2.addItems(channel_2_options)
-        self.select_channel_2.setCurrentIndex(1)
 
         cancel_button = QtWidgets.QPushButton("Cancel", self)
-        self.run_button = QtWidgets.QPushButton("Run", self)
-        self.run_button.setEnabled(False)
         cancel_button.clicked.connect(
             lambda: QtWidgets.QApplication.instance().exit(-1))
-        self.run_button.clicked.connect(self.do_run)
 
         layout = QtWidgets.QGridLayout()
         layout.addWidget(select_input_label, 0, 0)
@@ -99,7 +116,6 @@ class PyDist3dSettingsWidget(QtWidgets.QWidget):
         layout.addWidget(cancel_button, 5, 3)
         layout.addWidget(self.run_button, 5, 4)
         self.setLayout(layout)
-        self.show()
 
     def select_input(self):
         """
@@ -153,7 +169,10 @@ class PyDist3dSettingsWidget(QtWidgets.QWidget):
             QtWidgets.QApplication.instance().quit()
 
     def show_problem(self, problem_title, problem):
-        message = QtWidgets.QMessageBox()
+        """
+        Shows a simple message box with a warning symbol
+        """
+        message = QtWidgets.QMessageBox(self)
         message.setIcon(QtWidgets.QMessageBox.Warning)
         message.setText(problem_title)
         message.setInformativeText(problem)
