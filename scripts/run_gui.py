@@ -33,8 +33,8 @@ class PyDist3dSettingsWidget(QtWidgets.QWidget):
 
         threshold_options = ["None", "Otsu", "Li"]
         filter_options = ["None", "Gaussian (sigma 3px)"]
-        channel_1_options = ["0", "1", "2"]
-        channel_2_options = ["0", "1", "2"]
+        channel_1_options = ["1", "2", "3"]
+        channel_2_options = ["1", "2", "3"]
 
         # self.resize(600, 480)
         self.setWindowTitle("PyDist3D Settings")
@@ -135,8 +135,8 @@ class PyDist3dSettingsWidget(QtWidgets.QWidget):
         return {
             "input_folder": self.select_input_text.text(),
             "output_folder": self.select_output_text.text(),
-            "channel_1": int(self.select_channel_1.currentText()),
-            "channel_2": int(self.select_channel_2.currentText()),
+            "channel_1": int(self.select_channel_1.currentText()-1),
+            "channel_2": int(self.select_channel_2.currentText()-1),
             "filter_method": self.select_filter_select.currentText(),
             "threshold_method": self.select_threshold_select.currentText(),
         }
