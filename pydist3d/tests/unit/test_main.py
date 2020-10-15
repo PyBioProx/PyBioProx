@@ -217,3 +217,17 @@ class TestProcessFile:
         assert called_plottting_func == 1
         assert called_distance_analyser == 1
         assert called_output_function == 1
+
+
+class TestPerformFilterUsingMethod:
+    def test_no_inputs(self):
+        with pytest.raises(TypeError):
+            main.perform_filter_using_method()
+
+    def test_none_inputs(self):
+        value = main.perform_filter_using_method(None, None)
+        assert value is None
+
+    def test_none_inputs(self):
+        value = main.perform_filter_using_method(None, 'none')
+        assert value is None

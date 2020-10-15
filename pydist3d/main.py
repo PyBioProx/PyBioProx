@@ -38,13 +38,15 @@ def get_files(folder):
 
 
 def perform_filter_using_method(image, method):
-    if method is None:
+    """
+    Runs specified filter (or just returns the original image)
+    """
+    if (method is None) or method.lower() == 'none':
         return image
     method = method.lower()
     if method == "gaussian (sigma 3px)":
         return ndi.gaussian_filter(image, sigma=3.0)
-    else:
-        raise ValueError(f"Filter method [{method}] not supported")
+    raise ValueError(f"Filter method [{method}] not supported")
 
 
 def perform_thresholding(filtered1, filtered2, threshold_method):
