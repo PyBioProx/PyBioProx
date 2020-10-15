@@ -7,7 +7,10 @@ J. Metz <metz.jp@gmail.com>
 from dataclasses import dataclass
 import numpy as np
 import scipy.ndimage as ndi
-from pydist3d.utility import logger
+from pydist3d.utility import get_logger
+
+logger = get_logger()
+MAX_OBJECTS = 500
 
 
 @dataclass(frozen=True)
@@ -57,7 +60,7 @@ def edge_to_edge(mask1, mask2, scale=None):
 
     labels1, num_objects1 = ndi.label(mask1)
 
-    if num_objects1 > 500:
+    if num_objects1 > MAX_OBJECTS:
         logger.critical("Too many objects found (%s), skipping", num_objects1)
         return None, None
     # NB: As this function is in scipy.ndimage - it happily handles

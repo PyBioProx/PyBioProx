@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 import skimage.filters as skfilt
 import scipy.ndimage as ndi
 from pydist3d.distance_analysis import get_analyser
-from pydist3d.utility import logger
+from pydist3d.utility import get_logger
 plt.switch_backend('agg')
 
 # ------------------------------
@@ -25,6 +25,7 @@ __threshold_functions__ = {
     'li': skfilt.threshold_li,
     'otsu': skfilt.threshold_otsu,
 }
+logger = get_logger()  # pylint: disable=invalid-name
 
 
 @dataclass(frozen=True)
@@ -163,9 +164,10 @@ def process_file(
             'xymicsperpix': __xymicsperpix__,
             'zmicsperpix': __zmicsperpix__})
 
-    output_distances_and_stats(
-        os.path.basename(filepath), output_folder,
-        distances_list, dist_stats_list)
+    if distances_list is not None:
+        output_distances_and_stats(
+            os.path.basename(filepath), output_folder,
+            distances_list, dist_stats_list)
 
 
 def output_distances_and_stats(name, folder, distances, dist_stats):
