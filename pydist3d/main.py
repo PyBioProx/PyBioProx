@@ -6,7 +6,6 @@ J. Metz <metz.jp@gmail.com>
 """
 import os
 import csv
-import warnings
 import numpy as np
 import tifffile
 import matplotlib.pyplot as plt
@@ -218,7 +217,7 @@ def plot_and_save_outlines(channel1, channel2, mask1, mask2, filepath):
     plt.imshow(channel2[slices], cmap="gray")
     if len(np.unique(mask2[slices])) > 1:
         plt.contour(mask2[slices], levels=[0.5], colors=["r"])
-        warnings.warn(f"Values in mask2[slices]: {np.unique(mask2[slices])}")
+        logger.debug(f"Values in mask2[slices]: {np.unique(mask2[slices])}")
         savename = "{}_mask2.png".format(filepath)
     else:
         savename = "{}_mask2_NO_REGIONS.png".format(filepath)
