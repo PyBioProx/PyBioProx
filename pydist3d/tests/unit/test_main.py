@@ -77,7 +77,6 @@ class TestBatch:
         assert called_get_files == 1
         assert called_process_file == 0
 
-
     def test_existing_folder_with_data(self, monkeypatch):
         called_get_files = 0
         called_process_file = 0
@@ -100,8 +99,6 @@ class TestBatch:
         main.batch(folder_junk, output_folder=folder_out_junk)
         assert called_get_files == 1
         assert called_process_file == 3
-
-
 
 
 class TestGetFiles:

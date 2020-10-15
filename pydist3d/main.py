@@ -6,12 +6,13 @@ J. Metz <metz.jp@gmail.com>
 """
 import os
 import csv
+from dataclasses import dataclass
 import numpy as np
 import tifffile
 import matplotlib.pyplot as plt
 import skimage.filters as skfilt
 import scipy.ndimage as ndi
-from pydist3d import distance_analysis
+from pydist3d.distance_analysis import get_analyser
 from pydist3d.utility import logger
 plt.switch_backend('agg')
 
@@ -24,6 +25,19 @@ __threshold_functions__ = {
     'li': skfilt.threshold_li,
     'otsu': skfilt.threshold_otsu,
 }
+
+
+@dataclass(frozen=True)
+class Config:
+    """
+    Default configuration object.
+    Once these have been set at input time, they cannot be changed
+    """
+    channel1_index: int = 0
+    channel2_index: int = 1
+    filter_method: str = 'none'
+    threshold_method: str = 'none'
+    distance_analyser: str = 'edge-to-edge'
 
 
 def get_files(folder):
@@ -68,19 +82,11 @@ def perform_thresholding(filtered1, filtered2, threshold_method):
     return mask1, mask2
 
 
-def process_file(
-        filepath,
-        output_folder,
-        channel1_index=0,
-        channel2_index=1,
-        filter_method=None,
-        threshold_method=None,
-        distance_analyser='edge-to-edge'):
+def load_data(filepath, channel1_index, channel2_index):
     """
-    Perform main processing on the file
+    Loads the data and performs necessary channel selection
+    returns the selected channel images
     """
-    if isinstance(distance_analyser, str):
-        distance_analyser = distance_analysis.get_analyser(distance_analyser)
     # load the data using tifffile, unlike when
     # loading .czi files, no unnecessary
     # dimensions are added, meaning that we do not need to
@@ -109,12 +115,30 @@ def process_file(
 
     logger.debug("Channel 1 data has shape: %s", channel1.shape)
     logger.debug("Channel 2 data has shape: %s", channel2.shape)
+    return channel1, channel2
+
+
+def process_file(
+        filepath,
+        output_folder,
+        **config):
+    """
+    Perform main processing on the file
+    """
+    config = Config(**config)
+    if isinstance(config.distance_analyser, str):
+        distance_analyser = get_analyser(config.distance_analyser)
+    else:
+        distance_analyser = config.distance_analyser
+    channel1, channel2 = load_data(
+        filepath, config.channel1_index, config.channel2_index)
     # at this point extra filtering steps can be inserted; I
     # have pre-filtered tis data in image-j so no need for extra filtering
-    filtered1 = perform_filter_using_method(channel1, filter_method)
-    filtered2 = perform_filter_using_method(channel2, filter_method)
+    filtered1 = perform_filter_using_method(channel1, config.filter_method)
+    filtered2 = perform_filter_using_method(channel2, config.filter_method)
     # identify thresholding values using method selected
-    mask1, mask2 = perform_thresholding(filtered1, filtered2, threshold_method)
+    mask1, mask2 = perform_thresholding(
+        filtered1, filtered2, config.threshold_method)
 
     # We now create overlay figures for channel 1 and 2
     # and save to the input folder to allow
@@ -221,7 +245,7 @@ def plot_and_save_outlines(channel1, channel2, mask1, mask2, filepath):
     plt.imshow(channel2[slices], cmap="gray")
     if len(np.unique(mask2[slices])) > 1:
         plt.contour(mask2[slices], levels=[0.5], colors=["r"])
-        logger.debug(f"Values in mask2[slices]: {np.unique(mask2[slices])}")
+        logger.debug("Values in mask2[slices]: %s", np.unique(mask2[slices]))
         savename = "{}_mask2.png".format(filepath)
     else:
         savename = "{}_mask2_NO_REGIONS.png".format(filepath)
@@ -233,10 +257,7 @@ def plot_and_save_outlines(channel1, channel2, mask1, mask2, filepath):
 def batch(
         input_folder,
         output_folder=None,
-        channel1_index=0,
-        channel2_index=1,
-        filter_method=None,
-        threshold_method=None,
+        **config,
         ):
     """
     Batch process all the data files in a given folder,
@@ -252,20 +273,14 @@ def batch(
         process_file(
             filepath,
             output_folder=output_folder,
-            channel1_index=channel1_index,
-            channel2_index=channel2_index,
-            filter_method=filter_method,
-            threshold_method=threshold_method,
+            **config
         )
 
 
 def main(
         input_folder,
         output_folder=None,
-        channel1_index=0,
-        channel2_index=1,
-        filter_method=None,
-        threshold_method=None,
+        **config
         ):
     """
     Main entry point to run the pydist3d analysis pipeline
@@ -275,10 +290,7 @@ def main(
     batch(
         input_folder=input_folder,
         output_folder=output_folder,
-        channel1_index=channel1_index,
-        channel2_index=channel2_index,
-        filter_method=filter_method,
-        threshold_method=threshold_method,
+        **config
     )
 
 

@@ -151,8 +151,8 @@ class PyDist3dSettingsWidget(QtWidgets.QWidget):
         return {
             "input_folder": self.select_input_text.text(),
             "output_folder": self.select_output_text.text(),
-            "channel_1": int(self.select_channel_1.currentText()-1),
-            "channel_2": int(self.select_channel_2.currentText()-1),
+            "channel_1": int(self.select_channel_1.currentText())-1,
+            "channel_2": int(self.select_channel_2.currentText())-1,
             "filter_method": self.select_filter_select.currentText(),
             "threshold_method": self.select_threshold_select.currentText(),
         }
