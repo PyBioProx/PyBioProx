@@ -7,7 +7,7 @@ J. Metz <metz.jp@gmail.com>
 import os
 import pytest
 import numpy as np
-from pydist3d import main
+from pybioprox import main
 from unittest.mock import Mock
 
 

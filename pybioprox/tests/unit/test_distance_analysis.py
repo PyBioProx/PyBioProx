@@ -8,7 +8,7 @@ J. Metz <metz.jp@gmail.com>
 import os
 import pytest
 import numpy as np
-from pydist3d import distance_analysis
+from pybioprox import distance_analysis
 
 
 def test_distance_analysis_none_inputs():

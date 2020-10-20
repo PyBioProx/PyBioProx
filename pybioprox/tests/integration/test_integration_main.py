@@ -8,7 +8,7 @@ import os
 import numpy as np
 import imageio
 import scipy.ndimage as ndi
-from pydist3d import main
+from pybioprox import main
 
 
 def create_temp_image_simple(tmp_path):

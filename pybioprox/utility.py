@@ -1,6 +1,6 @@
 """utility.py
 
-Utility submodule for pydist3d
+Utility submodule for pybioprox
 
 Contains logger
 

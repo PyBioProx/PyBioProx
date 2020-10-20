@@ -1,6 +1,6 @@
 """run_gui.py
 
-Script to launch pydist3d and collect
+Script to launch pybioprox and collect
 any user input using GUI interfaces
 
 J. Metz <metz.jp@gmail.com>
@@ -12,13 +12,13 @@ from PyQt5 import QtWidgets  # type: ignore
 
 try:
     # pylint: disable=invalid-name
-    pydist3d_main = importlib.import_module('pydist3d.main')
+    pybioprox_main = importlib.import_module('pybioprox.main')
 except ModuleNotFoundError:
     MODULE_ROOT = os.path.abspath(
         os.path.join(os.path.dirname(__file__), ".."))
     sys.path.insert(0, MODULE_ROOT)
     # pylint: disable=invalid-name
-    pydist3d_main = importlib.import_module('pydist3d.main')
+    pybioprox_main = importlib.import_module('pybioprox.main')
 
 
 def get_folder_gui(caption="Select folder"):
@@ -44,7 +44,7 @@ def main():
         "Select output folder or press cancel for default")
     if not output_folder:
         output_folder = None
-    pydist3d_main.main(folder, output_folder=output_folder)
+    pybioprox_main.main(folder, output_folder=output_folder)
 
 
 if __name__ == '__main__':

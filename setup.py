@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """setup.py
 
-Setup script for pydist3d module
+Setup script for pybioprox module
 
 J. Metz <metz.jp@gmail.com>
 """
@@ -13,7 +13,7 @@ from setuptools import setup, Command
 import coverage
 import pytest
 
-MODNAME = "pydist3d"
+MODNAME = "pybioprox"
 
 
 class CoverageCommand(Command):
@@ -59,13 +59,13 @@ class CoverageCommand(Command):
 
 
 setup(
-    name='pydist3d',
+    name=MODNAME,
     version='0.1',
     description='Distance-based colocalisation analysis module',
     author='Jeremy Metz',
     author_email='j.metz@exeter.ac.uk',
-    packages=['pydist3d'],
-    test_suite="pydist3d.tests",
+    packages=[MODNAME],
+    test_suite=f"{MODNAME}.tests",
     setup_requires=['pytest-runner'],
     tests_require=['pytest'],
     cmdclass={

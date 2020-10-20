@@ -1,6 +1,6 @@
 """main.py
 
-Main entry module for pydist3d
+Main entry module for pybioprox
 
 J. Metz <metz.jp@gmail.com>
 """
@@ -12,8 +12,8 @@ import tifffile
 import matplotlib.pyplot as plt
 import skimage.filters as skfilt
 import scipy.ndimage as ndi
-from pydist3d.distance_analysis import get_analyser
-from pydist3d.utility import get_logger
+from pybioprox.distance_analysis import get_analyser
+from pybioprox.utility import get_logger
 plt.switch_backend('agg')
 
 # ------------------------------
@@ -285,7 +285,7 @@ def main(
         **config
         ):
     """
-    Main entry point to run the pydist3d analysis pipeline
+    Main entry point to run the pybioprox analysis pipeline
     """
     if output_folder is None:
         output_folder = os.path.join(input_folder, "tables")

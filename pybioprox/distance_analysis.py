@@ -7,7 +7,7 @@ J. Metz <metz.jp@gmail.com>
 from dataclasses import dataclass
 import numpy as np
 import scipy.ndimage as ndi
-from pydist3d.utility import get_logger
+from pybioprox.utility import get_logger
 
 logger = get_logger()
 MAX_OBJECTS = 500

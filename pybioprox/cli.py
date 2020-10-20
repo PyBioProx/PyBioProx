@@ -1,12 +1,12 @@
 """cli.py
 
-Command Line Interface for pydist3d
+Command Line Interface for pybioprox
 
 J. Metz <metz.jp@gmail.com>
 """
 
 import argparse
-import pydist3d.main as main
+import pybioprox.main as main
 
 
 def create_parser():

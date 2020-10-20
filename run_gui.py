@@ -1,6 +1,6 @@
 """run_gui.py
 
-Script to launch pydist3d and collect
+Script to launch pybioprox and collect
 any user input using GUI interfaces
 
 J. Metz <metz.jp@gmail.com>
@@ -13,13 +13,13 @@ from PyQt5 import QtWidgets  # type: ignore
 
 try:
     # pylint: disable=invalid-name
-    pydist3d_main = importlib.import_module('pydist3d.main')
+    pybioprox_main = importlib.import_module('pybioprox.main')
 except ModuleNotFoundError:
     MODULE_ROOT = os.path.abspath(
         os.path.join(os.path.dirname(__file__), ".."))
     sys.path.insert(0, MODULE_ROOT)
     # pylint: disable=invalid-name
-    pydist3d_main = importlib.import_module('pydist3d.main')
+    pybioprox_main = importlib.import_module('pybioprox.main')
 
 
 class PyDist3dSettingsWidget(QtWidgets.QWidget):
@@ -227,7 +227,7 @@ def main():
     """
     settings = get_settings()
     print("Settings:", settings)
-    pydist3d_main.main(**(settings.asdict()))
+    pybioprox_main.main(**(settings.asdict()))
 
 
 if __name__ == '__main__':
