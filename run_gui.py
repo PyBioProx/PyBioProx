@@ -8,6 +8,7 @@ J. Metz <metz.jp@gmail.com>
 import os
 import sys
 import importlib
+from dataclasses import make_dataclass
 from PyQt5 import QtWidgets  # type: ignore
 
 try:
@@ -148,7 +149,7 @@ class PyDist3dSettingsWidget(QtWidgets.QWidget):
         """
         Return the settings as a dictionary
         """
-        return {
+        settings = {
             "input_folder": self.select_input_text.text(),
             "output_folder": self.select_output_text.text(),
             "channel_1": int(self.select_channel_1.currentText())-1,
@@ -156,6 +157,8 @@ class PyDist3dSettingsWidget(QtWidgets.QWidget):
             "filter_method": self.select_filter_select.currentText(),
             "threshold_method": self.select_threshold_select.currentText(),
         }
+        return make_dataclass(
+            "Settings", settings.keys(), frozen=True)(**settings)
 
     def do_run(self):
         """
@@ -184,21 +187,21 @@ class PyDist3dSettingsWidget(QtWidgets.QWidget):
         or False if not
         """
         settings = self.get_settings()
-        if not os.path.isdir(settings["input_folder"]):
+        if not os.path.isdir(settings.input_folder):
             return (
                 "Input folder problem",
-                f"Input folder [{settings['input_folder']}]"
+                f"Input folder [{settings.input_folder}]"
                 " must be an existing folder")
-        if not os.path.isdir(settings["output_folder"]):
+        if not os.path.isdir(settings.output_folder):
             return (
                 "Output folder problem",
-                f"Output folder [{settings['output_folder']}]"
+                f"Output folder [{settings.output_folder}]"
                 " must be an existing folder")
-        if settings["channel_1"] == settings["channel_2"]:
+        if settings.channel_1 == settings.channel_2:
             return (
                 "Channel selection problem",
-                f"channel 1 [{settings['channel_1']}]"
-                f" must be diffent from channel 2 [{settings['channel_2']}]")
+                f"channel 1 [{settings.channel_1}]"
+                f" must be diffent from channel 2 [{settings.channel_2}]")
         return False
 
 
@@ -224,14 +227,7 @@ def main():
     """
     settings = get_settings()
     print("Settings:", settings)
-    pydist3d_main.main(
-        settings["input_folder"],
-        output_folder=settings["output_folder"],
-        channel1_index=settings["channel_1"],
-        channel2_index=settings["channel_2"],
-        filter_method=settings["filter_method"],
-        threshold_method=settings["threshold_method"],
-    )
+    pydist3d_main.main(**(settings.asdict()))
 
 
 if __name__ == '__main__':
