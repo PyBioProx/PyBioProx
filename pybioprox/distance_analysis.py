@@ -28,6 +28,9 @@ def get_analyser(name):
     Return a list of analysis functions in the current
     submodule
     """
+    # Handle case we already have a function
+    if callable(name):
+        return name
     # Can't use hyphens or spaces
     name_sanitized = name.replace('-', '_').replace(' ', '_')
     candidates = {

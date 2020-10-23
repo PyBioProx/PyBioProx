@@ -6,7 +6,7 @@ J. Metz <metz.jp@gmail.com>
 """
 import os
 import csv
-from dataclasses import dataclass
+import dataclasses
 import numpy as np
 import tifffile
 import matplotlib.pyplot as plt
@@ -28,7 +28,7 @@ __threshold_functions__ = {
 logger = get_logger()  # pylint: disable=invalid-name
 
 
-@dataclass(frozen=True)
+@dataclasses.dataclass(frozen=True)
 class Config:
     """
     Default configuration object.
@@ -39,6 +39,10 @@ class Config:
     filter_method: str = 'none'
     threshold_method: str = 'none'
     distance_analyser: str = 'edge-to-edge'
+
+    def as_dict(self):
+        """For simple conversion"""
+        return dataclasses.asdict(self)
 
 
 def get_files(folder):
@@ -119,6 +123,33 @@ def load_data(filepath, channel1_index, channel2_index):
     return channel1, channel2
 
 
+def detect_objects(channel1, channel2, config):
+    """
+    Only the detection part
+    """
+    logger.debug("Running detection with parameters:")
+    logger.debug(config)
+    mask1, mask2, *_ = detect_objects_with_filter_outputs(
+        channel1,
+        channel2,
+        config)
+    return mask1, mask2
+
+
+def detect_objects_with_filter_outputs(channel1, channel2, config):
+    """
+    Only the detection part, including debugging output
+    """
+    # at this point extra filtering steps can be inserted; I
+    # have pre-filtered tis data in image-j so no need for extra filtering
+    filtered1 = perform_filter_using_method(channel1, config.filter_method)
+    filtered2 = perform_filter_using_method(channel2, config.filter_method)
+    # identify thresholding values using method selected
+    mask1, mask2 = perform_thresholding(
+        filtered1, filtered2, config.threshold_method)
+    return mask1, mask2, filtered1, filtered2
+
+
 def process_file(
         filepath,
         output_folder,
@@ -127,20 +158,10 @@ def process_file(
     Perform main processing on the file
     """
     config = Config(**config)
-    if isinstance(config.distance_analyser, str):
-        distance_analyser = get_analyser(config.distance_analyser)
-    else:
-        distance_analyser = config.distance_analyser
     channel1, channel2 = load_data(
         filepath, config.channel1_index, config.channel2_index)
-    # at this point extra filtering steps can be inserted; I
-    # have pre-filtered tis data in image-j so no need for extra filtering
-    filtered1 = perform_filter_using_method(channel1, config.filter_method)
-    filtered2 = perform_filter_using_method(channel2, config.filter_method)
-    # identify thresholding values using method selected
-    mask1, mask2 = perform_thresholding(
-        filtered1, filtered2, config.threshold_method)
-
+    mask1, mask2 = detect_objects(channel1, channel2, config)
+    distance_analyser = get_analyser(config.distance_analyser)
     # We now create overlay figures for channel 1 and 2
     # and save to the input folder to allow
     # the thresholding to be assessed
@@ -213,6 +234,22 @@ def plot_and_save_outlines(channel1, channel2, mask1, mask2, filepath):
     """
     Creates and saves outline plots from the channel data and masks
     """
+    figs, have_objects = plot_outlines(channel1, channel2, mask1, mask2)
+
+    for num, (fig, has_objects) in enumerate(zip(figs, have_objects), start=1):
+        if has_objects:
+            savename = "{}_mask_{}.png".format(filepath, num)
+        else:
+            savename = "{}_mask_{}_NO_REGIONS.png".format(filepath, num)
+        fig.savefig(savename)
+        plt.close(fig)
+    logger.info("Created overlay images")
+
+
+def plot_outlines(channel1, channel2, mask1, mask2, axes=None):
+    """
+    Plot channel images with mask outlines
+    """
     # channel1 overlay images:
     size = channel1.shape[-2:]
     slices = [slice(None) for dim in channel1.shape]
@@ -222,38 +259,38 @@ def plot_and_save_outlines(channel1, channel2, mask1, mask2, filepath):
         slices[i] = middle_index
     slices = tuple(slices)
 
-    plt.figure(
-        "Mask 1",
-        figsize=(12, 12 * size[0] / size[1]),
-        dpi=size[1] / 12,
-    )
-    plt.axes([0, 0, 1, 1])
-    plt.imshow(channel1[slices], cmap="gray")
-    if len(np.unique(mask1[slices])) > 1:
-        plt.contour(mask1[slices], levels=[0.5], colors=["r"])
-        savename = "{}_mask1.png".format(filepath)
+    if axes is None:
+        figs = (
+            plt.figure(
+                "Mask 1",
+                figsize=(12, 12 * size[0] / size[1]),
+                dpi=size[1] / 12,
+            ),
+            plt.figure(
+                "Mask 2",
+                figsize=(12, 12 * size[0] / size[1]),
+                dpi=size[1] / 12,
+            ))
+        axes = tuple(fig.gca(position=[0, 0, 1, 1]) for fig in figs)
     else:
-        savename = "{}_mask1_NO_REGIONS.png".format(filepath)
-    plt.savefig(savename)
-    plt.close()
+        figs = tuple(axis.get_figure() for axis in axes)
+
+    for axis in axes:
+        axis.clear()
+
+    axes[0].imshow(channel1[slices], cmap="gray")
+    mask1_has_objects = len(np.unique(mask1[slices])) > 1
+    if mask1_has_objects:
+        axes[0].contour(mask1[slices], levels=[0.5], colors=["r"])
+        logger.debug("Values in mask1[slices]: %s", np.unique(mask1[slices]))
 
     # channel2 overlay images:
-    plt.figure(
-        "Mask 2",
-        figsize=(12, 12 * size[0] / size[1]),
-        dpi=size[1] / 12,
-    )
-    plt.axes([0, 0, 1, 1])
-    plt.imshow(channel2[slices], cmap="gray")
-    if len(np.unique(mask2[slices])) > 1:
-        plt.contour(mask2[slices], levels=[0.5], colors=["r"])
+    axes[1].imshow(channel2[slices], cmap="gray")
+    mask2_has_objects = len(np.unique(mask2[slices])) > 1
+    if mask2_has_objects:
+        axes[1].contour(mask2[slices], levels=[0.5], colors=["r"])
         logger.debug("Values in mask2[slices]: %s", np.unique(mask2[slices]))
-        savename = "{}_mask2.png".format(filepath)
-    else:
-        savename = "{}_mask2_NO_REGIONS.png".format(filepath)
-    plt.savefig(savename)
-    plt.close()
-    logger.info("Created overlay images")
+    return figs, (mask1_has_objects, mask2_has_objects)
 
 
 def batch(
