@@ -21,6 +21,7 @@ plt.switch_backend('agg')
 # ------------------------------
 __zmicsperpix__ = 0.75
 __xymicsperpix__ = 0.08
+__max_num_objects__ = 10000
 __threshold_functions__ = {
     'li': skfilt.threshold_li,
     'otsu': skfilt.threshold_otsu,
@@ -183,7 +184,8 @@ def process_file(
         mask1, mask2,
         scale={
             'xymicsperpix': __xymicsperpix__,
-            'zmicsperpix': __zmicsperpix__})
+            'zmicsperpix': __zmicsperpix__},
+        max_num_objects=__max_num_objects__)
 
     if distances_list is not None:
         output_distances_and_stats(

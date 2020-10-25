@@ -9,8 +9,7 @@ import numpy as np
 import scipy.ndimage as ndi
 from pybioprox.utility import get_logger
 
-logger = get_logger()
-MAX_OBJECTS = 500
+logger = get_logger()  # pylint: disable=invalid-name
 
 
 @dataclass(frozen=True)
@@ -42,10 +41,12 @@ def get_analyser(name):
     return candidates[name_sanitized]
 
 
-def edge_to_edge(mask1, mask2, scale=None):
+def edge_to_edge(mask1, mask2, scale=None, max_num_objects=None):
     """
     Analyses edge-to-edge distances TODO: COMPLETE ME
     """
+    if max_num_objects is None:
+        max_num_objects = np.inf
     scale = Scale(**dict({'xymicsperpix': 1, 'zmicsperpix': 1}, **scale or {}))
     # Generate distance map of mask2 - Note: because the distance
     # map here measures how far to the nearest OFF pixel (0), we need to
@@ -63,7 +64,7 @@ def edge_to_edge(mask1, mask2, scale=None):
 
     labels1, num_objects1 = ndi.label(mask1)
 
-    if num_objects1 > MAX_OBJECTS:
+    if num_objects1 > max_num_objects:
         logger.critical("Too many objects found (%s), skipping", num_objects1)
         return None, None
     # NB: As this function is in scipy.ndimage - it happily handles
@@ -73,9 +74,18 @@ def edge_to_edge(mask1, mask2, scale=None):
 
     logger.info("Number of objects in mask1: %s", num_objects1)
 
-    # Next we want to process each labelled region (~object)
-    # individually, so we will use a for-loop
-    # We know how many objects there are from num_objects1
+    distances_list, dist_stats_list = edge_to_edge_process_individual_objects(
+        labels1, num_objects1, distancemap2)
+    return distances_list, dist_stats_list
+
+
+def edge_to_edge_process_individual_objects(
+        labels1, num_objects1, distancemap2):
+    """
+    We want to process each labelled region (~object)
+    individually, so we will use a for-loop
+    We know how many objects there are from num_objects1
+    """
 
     # NOTE: The Python range function, when called with two inputs
     # generates the numbers input1, input1+1, input1+2, ... , input2-1
