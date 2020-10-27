@@ -68,6 +68,7 @@ setup(
     test_suite=f"{MODNAME}.tests",
     setup_requires=['pytest-runner'],
     tests_require=['pytest'],
+    scripts=['pybioprox_gui.py'],
     cmdclass={
         "coverage": CoverageCommand,
     },

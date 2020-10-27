@@ -1,4 +1,5 @@
-"""run_gui.py
+#!/usr/bin/env python
+"""pybioprox_gui.py
 
 Script to launch pybioprox and collect
 any user input using GUI interfaces
@@ -14,7 +15,7 @@ import matplotlib.pyplot as plt
 plt.switch_backend('qt5agg')
 
 
-class PyDist3dSettingsWidget(QtWidgets.QWidget):
+class PyBioProxSettingsWidget(QtWidgets.QWidget):
     """
     Class representing a dialog for inputting more advanced settings than just
     requesting the input folder name
@@ -238,7 +239,7 @@ def get_settings():
     """
     # pylint: disable=c-extension-no-member
     app = QtWidgets.QApplication([])
-    window = PyDist3dSettingsWidget()
+    window = PyBioProxSettingsWidget()
     return_code = app.exec_()
     if return_code != 0:
         print("Run cancelled, quitting")
