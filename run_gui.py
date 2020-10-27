@@ -33,7 +33,7 @@ class PyDist3dSettingsWidget(QtWidgets.QWidget):
         self.run_button = None
         self.generate_controls()
         self.generate_layout()
-        self.setWindowTitle("PyDist3D Settings")
+        self.setWindowTitle("PyBioProx Settings")
         self.show()
 
     def generate_controls(self):
@@ -80,9 +80,9 @@ class PyDist3dSettingsWidget(QtWidgets.QWidget):
 
         select_threshold_label = QtWidgets.QLabel("Thresholding", self)
 
-        select_channel_1_label = QtWidgets.QLabel("Channel 1", self)
+        select_channel_1_label = QtWidgets.QLabel("Measure from channel", self)
 
-        select_channel_2_label = QtWidgets.QLabel("Channel 2", self)
+        select_channel_2_label = QtWidgets.QLabel("to channel", self)
 
         cancel_button = QtWidgets.QPushButton("Cancel", self)
         cancel_button.clicked.connect(
