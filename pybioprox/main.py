@@ -19,9 +19,6 @@ plt.switch_backend('agg')
 # ------------------------------
 # Add in calibration of pixels in xy and z directions
 # ------------------------------
-__zmicsperpix__ = 0.75
-__xymicsperpix__ = 0.08
-__max_num_objects__ = 10000
 __threshold_functions__ = {
     'li': skfilt.threshold_li,
     'otsu': skfilt.threshold_otsu,
@@ -30,7 +27,7 @@ logger = get_logger()  # pylint: disable=invalid-name
 
 
 @dataclasses.dataclass(frozen=True)
-class Config:
+class Config:  # pylint: disable=too-many-instance-attributes # (8/7)
     """
     Default configuration object.
     Once these have been set at input time, they cannot be changed
@@ -40,6 +37,9 @@ class Config:
     filter_method: str = 'none'
     threshold_method: str = 'none'
     distance_analyser: str = 'edge-to-edge'
+    scales: tuple = (0.08, 0.75)
+    units: tuple = ('um', 'um')
+    max_num_objects = 10000
 
     def as_dict(self):
         """For simple conversion"""
@@ -183,9 +183,9 @@ def process_file(
     distances_list, dist_stats_list = distance_analyser(
         mask1, mask2,
         scale={
-            'xymicsperpix': __xymicsperpix__,
-            'zmicsperpix': __zmicsperpix__},
-        max_num_objects=__max_num_objects__)
+            'xymicsperpix': config.scales[0],
+            'zmicsperpix': config.scales[1]},
+        max_num_objects=config.max_num_objects)
 
     if distances_list is not None:
         output_distances_and_stats(
