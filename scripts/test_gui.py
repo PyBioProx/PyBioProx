@@ -9,7 +9,7 @@ import sys
 import os
 try:
     sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-    from run_gui import PyDist3dSettingsWidget, QtWidgets
+    from pybioprox_gui import PyBioProxSettingsWidget, QtWidgets
 except ImportError:
     print("Could not import gui module, please check location and try again")
     raise
@@ -18,24 +18,24 @@ from PyQt5 import QtCore
 
 # class TestGui(unittest.TestCase):
 #    def test_create(self, qtbot):
-#        window = PyDist3dSettingsWidget()
+#        window = PyBioProxSettingsWidget()
 #        qtbot.addWidget(window)
-#        assert isinstance(window, PyDist3dSettingsWidget)
+#        assert isinstance(window, PyBioProxSettingsWidget)
 
 def test_create(qtbot):
     """
     Test creating a window
     """
-    window = PyDist3dSettingsWidget()
+    window = PyBioProxSettingsWidget()
     qtbot.addWidget(window)
-    assert isinstance(window, PyDist3dSettingsWidget)
+    assert isinstance(window, PyBioProxSettingsWidget)
 
 
 def test_run_disabled(qtbot):
     """
     Make sure run is disabled by default
     """
-    window = PyDist3dSettingsWidget()
+    window = PyBioProxSettingsWidget()
     qtbot.addWidget(window)
     assert not window.run_button.isEnabled()
 
@@ -69,7 +69,7 @@ def test_select_folder(qtbot, tmpdir, monkeypatch):
     Test that folders can be selected, and that then the run button
     enables
     """
-    window = PyDist3dSettingsWidget()
+    window = PyBioProxSettingsWidget()
     qtbot.addWidget(window)
     select_input_and_output_folders(window, tmpdir, monkeypatch)
     assert window.run_button.isEnabled()
@@ -80,7 +80,7 @@ def test_run(qtbot, tmpdir, monkeypatch):  # , mocker):
     Test that once the input and output folders are selected, that
     the result of get_settings makes sense
     """
-    window = PyDist3dSettingsWidget()
+    window = PyBioProxSettingsWidget()
     qtbot.addWidget(window)
     input_folder, output_folder = select_input_and_output_folders(
         window, tmpdir, monkeypatch)
