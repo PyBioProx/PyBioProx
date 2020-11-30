@@ -25,6 +25,12 @@ def create_parser():
 
 
 def run():
+    """
+    Main CLI run function
+
+    Creates an appropriate ArgumentParser and parses the command
+    line arguments, passing parameters through to pybioprox.main.main
+    """
     parser = create_parser()
     args = parser.parse_args()
 
