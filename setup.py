@@ -87,7 +87,7 @@ class CoverageCommand(Command):
 
 setup(
     name=__module_name__,
-    version='1.0',
+    version='1.0.1',
     license='AGPLv3',
     url='https://github.com/PyBioProx/PyBioProx',
     description='Distance-based colocalisation analysis module',
