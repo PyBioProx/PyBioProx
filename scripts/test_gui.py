@@ -53,14 +53,14 @@ def select_input_and_output_folders(window, tmpdir, monkeypatch):
         "getExistingDirectory",
         lambda *args, **kwargs: str(input_folder))
 
-    window.select_input()
+    window.select_input_widget.select_folder()
 
     monkeypatch.setattr(
         QtWidgets.QFileDialog,
         "getExistingDirectory",
         lambda *args, **kwargs: str(output_folder))
 
-    window.select_output()
+    window.select_output_widget.select_folder()
     return str(input_folder), str(output_folder)
 
 
