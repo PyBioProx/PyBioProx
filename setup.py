@@ -113,6 +113,8 @@ setup(
     tests_require=['pytest'],
     scripts=['pybioprox_gui.py'],
     cmdclass=create_cmdclass(),
+    long_description=open('readme.md').read(),
+    long_description_content_type='text/markdown',
     author='Jeremy Metz',
     author_email='j.metz@exeter.ac.uk',
 )
