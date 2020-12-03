@@ -11,7 +11,7 @@ import importlib
 from setuptools import setup, Command
 
 
-MODNAME = "pybioprox"
+__module_name__ = "pybioprox"
 
 
 def create_cmdclass():
@@ -46,10 +46,10 @@ class CoverageCommand(Command):
         # Coverage command
         # NOTE: Use API as follows for better control
         omitfiles = [
-            os.path.join(MODNAME, "tests", "unit", "*"),
-            os.path.join(MODNAME, "__main__.py"),
+            os.path.join(__module_name__, "tests", "unit", "*"),
+            os.path.join(__module_name__, "__main__.py"),
         ]
-        for root, _, files in os.walk(MODNAME):
+        for root, _, files in os.walk(__module_name__):
             omitfiles.extend(
                 os.path.join(root, fname) for fname in
                 filter(lambda f: f == "__init__.py", files)
@@ -57,15 +57,15 @@ class CoverageCommand(Command):
         coverage = importlib.import_module("coverage")
         pytest = importlib.import_module("pytest")
 
-        print("Running coverage on", MODNAME)
+        print("Running coverage on", __module_name__)
         cov = coverage.Coverage(
-            source=[MODNAME],
+            source=[__module_name__],
             omit=omitfiles,
             )
         cov.start()
         # Run normal tests
         # loader = unittest.TestLoader()
-        # tests = loader.discover(MODNAME)
+        # tests = loader.discover(__module_name__)
         # runner = unittest.runner.TextTestRunner()
         # runner.run(tests)
         pytest.main([])
@@ -74,13 +74,13 @@ class CoverageCommand(Command):
 
 
 setup(
-    name=MODNAME,
-    version='0.1',
+    name=__module_name__,
+    version='1.0',
+    license='AGPLv3',
+    url='https://github.com/PyBioProx/PyBioProx',
     description='Distance-based colocalisation analysis module',
-    author='Jeremy Metz',
-    author_email='j.metz@exeter.ac.uk',
-    packages=[MODNAME],
-    test_suite=f"{MODNAME}.tests",
+    packages=[__module_name__],
+    test_suite=f"{__module_name__}.tests",
     setup_requires=['pytest-runner'],
     install_requires=[
         "imageio==2.6.1",
@@ -93,7 +93,10 @@ setup(
         "tifffile==2020.2.16",
         "matplotlib==3.2.1",
     ],
+    python_requires=">=3.4",
     tests_require=['pytest'],
     scripts=['pybioprox_gui.py'],
     cmdclass=create_cmdclass(),
+    author='Jeremy Metz',
+    author_email='j.metz@exeter.ac.uk',
 )
