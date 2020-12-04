@@ -8,14 +8,14 @@ The analyses fall into the category of object-based colocalisation methods.
 To install this Python module, you may use pip as follows: 
 
 ```
-    pip install PyBioProx
+    pip install pybioprox 
 ```
 
 If you wish to also install the optional Graphical User Interface script, this may be done 
 by specifying the `gui` optional extra: 
 
 ```
-    pip install PyBioProx[gui]
+    pip install pybioprox[gui]
 ```
 
 
@@ -29,8 +29,9 @@ Once installed, the module can be invoked from the command-line using:
 
 to run the analysis in batch mode on all data files at the location `path_to_folder`. 
 
-If you have installed the gui component, then you may also run 
+If you have installed the gui component or already have the required gui libraries, 
+present on your system, then you may also run 
 ```
-    pybioprox_gui.py
+    pybioprox_gui
 ```
 directly from the command line. 

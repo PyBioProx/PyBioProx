@@ -86,35 +86,5 @@ class CoverageCommand(Command):
 
 
 setup(
-    name=__module_name__,
-    version='1.0.1',
-    license='AGPLv3',
-    url='https://github.com/PyBioProx/PyBioProx',
-    description='Distance-based colocalisation analysis module',
-    packages=[__module_name__],
-    test_suite=f"{__module_name__}.tests",
-    setup_requires=['pytest-runner'],
-    install_requires=[
-        "imageio>=2.6.1",
-        "scipy>=1.4.1",
-        "scikit_image>=0.16.2",
-        "colorama>=0.4.3",
-        "coloredlogs>=14.0",
-        "pandas>=1.0.3",
-        "numpy>=1.18",
-        "tifffile>=2020.2.16",
-        "matplotlib>=3.2.1",
-    ],
-    extras_require={
-        'dev':  ["coverage>=5.2", "PyQt5", "pytest-qt"],
-        'gui':  ["PyQt5"],
-    },
-    python_requires=">=3.4",
-    tests_require=['pytest'],
-    scripts=['pybioprox_gui.py'],
     cmdclass=create_cmdclass(),
-    long_description=open('readme.md').read(),
-    long_description_content_type='text/markdown',
-    author='Jeremy Metz',
-    author_email='j.metz@exeter.ac.uk',
 )
